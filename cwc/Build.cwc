@@ -1,0 +1,45 @@
+-#Run _Default_Config.cwc
+>
+-{_sOpt}={sOpt}
+>
+-{pSrc}=../src/
+-{pExtLib}=../ExtLib/
+-{pSokol}={pExtLib}/sokol/
+-{pData}={p_sapp}data/
+>
+-{vExIncl}=
+-I {pExtLib}imgui/
+>
+-{sFolder}={_sPlatform}_{_sOpt}_{sToolChainType}
+>
+-{pObj}=obj/{sSample}/{sFolder}/
+>
+-{pOut}:=_out/{sSample}/{sFolder}/
+>
+-{vIncl}=-I {pSokol} -I {p_sapp} -I {pSrc} -I {pSokol}util/
+;-DSOKOL_WGPU //Already defined
+>
+-{vFlag}=""
+>
+;Build Shader
+;shdc --input {p_sapp}/{sSample}.glsl --output {sSample}.glsl.h --slang glsl330:glsl100:glsl300es
+>
+;Build App
+>
+-c {pSrc}/ -o {pObj}/
+-DSOKOL_IMPL
+-{vSokolFlag}
+-{vIncl}
+-{vExIncl}
+-{vFlag}
+>
+;Build Imgui
+-c &{pExtLib}imgui/ -o {pObj}imgui/
+-I {pExtLib}imgui/
+-I {pExtLib}Freetype/
+>
+;Link
+-o {pObj} -#To {pOut}{sSample}.* -{vLink} 
+;-s OFFSCREEN_FRAMEBUFFER=1  
+;-s USE_WEBGL2=1 
+>

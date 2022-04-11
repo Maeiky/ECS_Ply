@@ -1,0 +1,8 @@
+;Register Cwc before using a .cwmake
+>
+-{sName}=ECS_Ply
+>
+-#Run Build.cwc
+>
+-#Run
+>

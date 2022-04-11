@@ -1,0 +1,37 @@
+;Default values (Can be predefined)
+;Uncomment to select
+>
+;-{sToolChainName}=WebRT
+-{sToolChainName}=LibRT
+;-{sToolChainName}=CpcDosRT
+>
+;-{sToolChainType}:=Default
+;-{sToolChainType}:=wasm
+-{sToolChainType}:=x64
+>
+-{sOpt}:=Debug
+;-{sOpt}:=O2
+;-{sOpt}:=OZ
+>
+-{vLink_WebRT}= -s TOTAL_MEMORY=33554432 -s USE_WEBGL2=1
+>
+-{vLink_LibRT}= -lgdi32 -lOle32
+-Wl,--export-all-symbols
+;-lopengl32
+>
+-{vSokolFlag_LibRT}= 
+-DSOKOL_GLCORE33
+>
+-{vSokolFlag_WebRT}= 
+-DSOKOL_GLES3 
+-DSOKOL_GLES2
+>
+-{vSokolFlag}= -{vSokolFlag_{sToolChainName}}
+-fno-exceptions
+-fno-rtti
+>
+-{vLink}= -{vLink_{sToolChainName}}
+>
+-{_wToolchain}:= VLianceTool/{sToolChainName}[{sToolChainType}]
+;-{_wToolchain}:= VLianceTool/CpcDosRT[Mingw]
+>
