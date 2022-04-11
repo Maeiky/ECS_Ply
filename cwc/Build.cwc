@@ -13,17 +13,18 @@
 >
 -{sFolder}={_sPlatform}_{_sOpt}_{sToolChainType}
 >
--{pObj}=obj/{sSample}/{sFolder}/
+-{pObj}=obj/{sName}/{sFolder}/
 >
--{pOut}:=_out/{sSample}/{sFolder}/
+-{pOut}:=_out/{sName}/{sFolder}/
 >
--{vIncl}=-I {pSokol} -I {p_sapp} -I {pSrc} -I {pSokol}util/
+-{vIncl}=-I {pSokol} -I {p_sapp} -I {pSrc} -I {pSokol}util/ -I {pExtLib}
 ;-DSOKOL_WGPU //Already defined
 >
 -{vFlag}=""
 >
+-{sShader}=MainShader |
 ;Build Shader
-;shdc --input {p_sapp}/{sSample}.glsl --output {sSample}.glsl.h --slang glsl330:glsl100:glsl300es
+shdc --input {pSrc}/{sShader}.glsl --output {sShader}.glsl.h --slang glsl330:glsl100:glsl300es
 >
 ;Build App
 >
