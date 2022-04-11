@@ -6,6 +6,7 @@
 -{pExtLib}=../ExtLib/
 -{pSokol}={pExtLib}/sokol/
 -{pData}={p_sapp}data/
+-{pRc}=../Rc/
 >
 -{vExIncl}=
 -I {pExtLib}imgui/
@@ -42,4 +43,6 @@
 -o {pObj} -#To {pOut}{sSample}.* -{vLink} 
 ;-s OFFSCREEN_FRAMEBUFFER=1  
 ;-s USE_WEBGL2=1 
+>
+-#Copy {pRc}{pOut}Rc/
 >
