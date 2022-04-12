@@ -24,7 +24,20 @@ void init(void) {
     sg_desc desc = { };
     desc.context = sapp_sgcontext();
     sg_setup(&desc);
+/*
+    // use sokol-imgui with all default-options (we're not doing
+    // multi-sampled rendering or using non-default pixel formats)
+    simgui_desc_t simgui_desc = { };
+    simgui_setup(&simgui_desc);
 
+    // initial clear color
+    pass_action.colors[0].action = SG_ACTION_CLEAR;
+    pass_action.colors[0].value = { 0.0f, 0.5f, 0.7f, 1.0f };*/
+}
+
+
+extern "C" void iniImGUI(void) {
+	
     // use sokol-imgui with all default-options (we're not doing
     // multi-sampled rendering or using non-default pixel formats)
     simgui_desc_t simgui_desc = { };
@@ -35,7 +48,7 @@ void init(void) {
     pass_action.colors[0].value = { 0.0f, 0.5f, 0.7f, 1.0f };
 }
 
-void frame(void) {
+extern "C" void frameImGUI(void) {
     const int width = sapp_width();
     const int height = sapp_height();
     simgui_new_frame({ width, height, sapp_frame_duration(), sapp_dpi_scale() });
@@ -72,7 +85,7 @@ void frame(void) {
     sg_begin_default_pass(&pass_action, width, height);
     simgui_render();
     sg_end_pass();
-    sg_commit();
+   // sg_commit();
 }
 
 void cleanup(void) {
@@ -80,7 +93,7 @@ void cleanup(void) {
     sg_shutdown();
 }
 
-void input(const sapp_event* event) {
+extern "C" void imgui_input(const sapp_event* event) {
     simgui_handle_event(event);
 }
 
@@ -88,9 +101,9 @@ sapp_desc sokol_main_second(int argc, char* argv[]) {
     (void)argc; (void)argv;
     sapp_desc desc = { };
     desc.init_cb = init;
-    desc.frame_cb = frame;
+    //desc.frame_cb = frame;
     desc.cleanup_cb = cleanup;
-    desc.event_cb = input;
+    //desc.event_cb = input;
     desc.gl_force_gles2 = true;
     desc.window_title = "Dear ImGui (sokol-app)";
     desc.ios_keyboard_resizes_canvas = false;

@@ -38,6 +38,8 @@ typedef struct {
 
 static void fetch_callback(const sfetch_response_t*);
 
+void iniImGUI(void);
+
 static void init(void) {
     /* setup sokol-gfx and the optional debug-ui*/
     sg_setup(&(sg_desc){
@@ -149,6 +151,8 @@ static void init(void) {
         .buffer_size = sizeof(state.file_buffer)
     });
     printf("%s\n", path_buf);
+	
+	iniImGUI();
 }
 
 /* The fetch-callback is called by sokol_fetch.h when the data is loaded,
@@ -190,12 +194,18 @@ static void fetch_callback(const sfetch_response_t* response) {
     }
 }
 
+
+void frameImGUI(void);
+
 /* The frame-function is fairly boring, note that no special handling is
    needed for the case where the texture isn't loaded yet.
    Also note the sfetch_dowork() function, this is usually called once a
    frame to pump the sokol-fetch message queues.
 */
 static void frame(void) {
+	
+	
+	
     /* pump the sokol-fetch message queues, and invoke response callbacks */
     sfetch_dowork();
 
@@ -217,7 +227,12 @@ static void frame(void) {
     sg_apply_uniforms(SG_SHADERSTAGE_VS, SLOT_vs_params, &SG_RANGE(vs_params));
     sg_draw(0, 36, 1);
     __dbgui_draw();
-    sg_end_pass();
+	    sg_end_pass();
+		
+		
+	frameImGUI();
+	
+
     sg_commit();
 }
 
@@ -227,15 +242,21 @@ static void cleanup(void) {
     sg_shutdown();
 }
 
+void imgui_input(const sapp_event* event);
+void input(const sapp_event* event) {
+    __dbgui_event(event);
+	imgui_input(event);
+}
+
 sapp_desc sokol_main(int argc, char* argv[]) {
     (void)argc; (void)argv;
     return (sapp_desc){
         .init_cb = init,
         .frame_cb = frame,
         .cleanup_cb = cleanup,
-        .event_cb = __dbgui_event,
         .width = 800,
         .height = 600,
+		.event_cb = input,
         .sample_count = 4,
         .gl_force_gles2 = true,
         .window_title = "Async PNG Loading (sokol-app)",
