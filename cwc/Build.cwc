@@ -29,11 +29,13 @@ shdc --input {pSrc}/{sShader}.glsl --output {sShader}.glsl.h --slang glsl330:gls
 ;Build App
 >
 -c {pSrc}/ -o {pObj}/
--DSOKOL_IMPL
 -{vSokolFlag}
 -{vIncl}
 -{vExIncl}
 -{vFlag}
+>
+;Build stb
+-c &{pExtLib}stb/ -o {pObj}stb/
 >
 ;Build Imgui
 -c &{pExtLib}imgui/ -o {pObj}imgui/
@@ -41,9 +43,9 @@ shdc --input {pSrc}/{sShader}.glsl --output {sShader}.glsl.h --slang glsl330:gls
 -I {pExtLib}Freetype/
 >
 ;Link
--o {pObj} -#To {pOut}{sSample}.* -{vLink} 
+-o {pObj} -#To {pOut}{sName}.* -{vLink} 
 ;-s OFFSCREEN_FRAMEBUFFER=1  
 ;-s USE_WEBGL2=1 
 >
--#Copy {pRc}{pOut}Rc/
+-#Copy {pRc} {pOut}Rc/
 >

@@ -84,7 +84,7 @@ void input(const sapp_event* event) {
     simgui_handle_event(event);
 }
 
-sapp_desc sokol_main(int argc, char* argv[]) {
+sapp_desc sokol_main_second(int argc, char* argv[]) {
     (void)argc; (void)argv;
     sapp_desc desc = { };
     desc.init_cb = init;

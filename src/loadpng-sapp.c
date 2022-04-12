@@ -9,6 +9,8 @@
 //
 //  This is a modified version of texcube-sapp.c
 //------------------------------------------------------------------------------
+#define SOKOL_IMPL
+
 #define HANDMADE_MATH_IMPLEMENTATION
 #define HANDMADE_MATH_NO_SSE
 #include "HandmadeMath.h"
@@ -141,7 +143,7 @@ static void init(void) {
     */
     char path_buf[512];
     sfetch_send(&(sfetch_request_t){
-        .path = fileutil_get_path("baboon.png", path_buf, sizeof(path_buf)),
+        .path = fileutil_get_path("RC/baboon.png", path_buf, sizeof(path_buf)),
         .callback = fetch_callback,
         .buffer_ptr = state.file_buffer,
         .buffer_size = sizeof(state.file_buffer)
