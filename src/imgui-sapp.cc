@@ -44,8 +44,8 @@ extern "C" void iniImGUI(void) {
     simgui_setup(&simgui_desc);
 
     // initial clear color
-    pass_action.colors[0].action = SG_ACTION_CLEAR;
-    pass_action.colors[0].value = { 0.0f, 0.5f, 0.7f, 1.0f };
+    pass_action.colors[0].action = SG_ACTION_LOAD;
+    pass_action.colors[0].value = { 0.0f, 0.5f, 0.7f, 0.0f };
 }
 
 extern "C" void frameImGUI(void) {
