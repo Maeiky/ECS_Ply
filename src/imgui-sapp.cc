@@ -42,6 +42,8 @@ extern "C" void iniImGUI(void) {
     // multi-sampled rendering or using non-default pixel formats)
     simgui_desc_t simgui_desc = { };
     simgui_setup(&simgui_desc);
+	
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     // initial clear color
     pass_action.colors[0].action = SG_ACTION_LOAD;
@@ -49,6 +51,7 @@ extern "C" void iniImGUI(void) {
 }
 
 extern "C" void frameImGUI(void) {
+	
     const int width = sapp_width();
     const int height = sapp_height();
     simgui_new_frame({ width, height, sapp_frame_duration(), sapp_dpi_scale() });
