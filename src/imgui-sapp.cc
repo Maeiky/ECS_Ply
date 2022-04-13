@@ -43,7 +43,9 @@ extern "C" void iniImGUI(void) {
     simgui_desc_t simgui_desc = { };
     simgui_setup(&simgui_desc);
 	
+	//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
 
     // initial clear color
     pass_action.colors[0].action = SG_ACTION_LOAD;
@@ -89,6 +91,22 @@ extern "C" void frameImGUI(void) {
     simgui_render();
     sg_end_pass();
    // sg_commit();
+   
+   
+  
+
+}
+
+
+extern "C" void endframeImGUI(void){
+	/*
+	 // Multi Viewports : Update and Render additional Platform Windows
+	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+	}*/
+
 }
 
 void cleanup(void) {

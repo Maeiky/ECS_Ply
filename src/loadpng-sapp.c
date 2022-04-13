@@ -196,6 +196,7 @@ static void fetch_callback(const sfetch_response_t* response) {
 
 
 void frameImGUI(void);
+void endframeImGUI(void);
 
 /* The frame-function is fairly boring, note that no special handling is
    needed for the case where the texture isn't loaded yet.
@@ -234,6 +235,8 @@ static void frame(void) {
 	
 
     sg_commit();
+	
+	endframeImGUI();
 }
 
 static void cleanup(void) {
