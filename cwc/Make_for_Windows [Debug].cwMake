@@ -1,5 +1,7 @@
 ;Register Cwc before using a .cwmake
 >
+-{sToolChainName}=LibRT
+>
 -{sName}=ECS_Ply
 >
 -#Run Build.cwc

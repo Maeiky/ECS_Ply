@@ -258,6 +258,7 @@ sapp_desc sokol_main(int argc, char* argv[]) {
         .height = 600,
 		.event_cb = input,
         .sample_count = 4,
+		.swap_interval = 1,
         .gl_force_gles2 = true,
         .window_title = "Async PNG Loading (sokol-app)",
         .icon.sokol_default = true,

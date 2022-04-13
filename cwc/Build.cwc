@@ -44,8 +44,7 @@ shdc --input {pSrc}/{sShader}.glsl --output {sShader}.glsl.h --slang glsl330:gls
 >
 ;Link
 -o {pObj} -#To {pOut}{sName}.* -{vLink} 
-;-s OFFSCREEN_FRAMEBUFFER=1  
-;-s USE_WEBGL2=1 
+-{vOS_FlagLink}
 >
 -#Copy {pRc} {pOut}Rc/
 >

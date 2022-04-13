@@ -1,10 +1,6 @@
 ;Default values (Can be predefined)
 ;Uncomment to select
 >
-;-{sToolChainName}=WebRT
--{sToolChainName}=LibRT
-;-{sToolChainName}=CpcDosRT
->
 ;-{sToolChainType}:=Default
 ;-{sToolChainType}:=wasm
 -{sToolChainType}:=x64
@@ -24,7 +20,8 @@
 >
 -{vSokolFlag_WebRT}= 
 -DSOKOL_GLES3 
--DSOKOL_GLES2
+ -fdeclspec 
+;-DSOKOL_GLES2
 >
 -{vSokolFlag}= -{vSokolFlag_{sToolChainName}}
 -fno-exceptions
