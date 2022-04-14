@@ -51,7 +51,7 @@ extern "C" void iniImGUI(void) {
     pass_action.colors[0].action = SG_ACTION_LOAD;
     pass_action.colors[0].value = { 0.0f, 0.5f, 0.7f, 0.0f };
 }
-
+ #include "imgui_internal.h" 
 extern "C" void frameImGUI(void) {
 	
     const int width = sapp_width();
@@ -77,6 +77,7 @@ extern "C" void frameImGUI(void) {
         ImGui::SetNextWindowSize(ImVec2(200,100), ImGuiCond_FirstUseEver);
         ImGui::Begin("Another Window", &show_another_window);
         ImGui::Text("Hello");
+
         ImGui::End();
     }
 
@@ -85,6 +86,143 @@ extern "C" void frameImGUI(void) {
         ImGui::SetNextWindowPos(ImVec2(460, 20), ImGuiCond_FirstUseEver);
         ImGui::ShowDemoWindow();
     }
+
+///////////
+/*
+
+ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
+ImGuiID dockspaceID = ImGui::GetID("MyDockSpace");
+if (!ImGui::DockBuilderGetNode(dockspaceID)) {
+	ImGui::DockBuilderRemoveNode(dockspaceID);
+	ImGui::DockBuilderAddNode(dockspaceID, ImGuiDockNodeFlags_None);
+
+	ImGuiID dock_main_id = dockspaceID;
+	ImGuiID dock_up_id = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.05f, nullptr, &dock_main_id);
+	ImGuiID dock_right_id = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.2f, nullptr, &dock_main_id);
+	ImGuiID dock_left_id = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.2f, nullptr, &dock_main_id);
+	ImGuiID dock_down_id = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.2f, nullptr, &dock_main_id);
+	ImGuiID dock_down_right_id = ImGui::DockBuilderSplitNode(dock_down_id, ImGuiDir_Right, 0.6f, nullptr, &dock_down_id);
+
+	ImGui::DockBuilderDockWindow("Actions", dock_up_id);
+	ImGui::DockBuilderDockWindow("Hierarchy", dock_right_id);
+	ImGui::DockBuilderDockWindow("Inspector", dock_left_id);
+	ImGui::DockBuilderDockWindow("Console", dock_down_id);
+	ImGui::DockBuilderDockWindow("Project", dock_down_right_id);
+	ImGui::DockBuilderDockWindow("Scene", dock_main_id);
+
+        // Disable tab bar for custom toolbar
+	ImGuiDockNode* node = ImGui::DockBuilderGetNode(dock_up_id);
+	node->LocalFlags |= ImGuiDockNodeFlags_NoTabBar;
+
+	ImGui::DockBuilderFinish(dock_main_id);
+}
+ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspaceFlags);
+/////////////////
+*/
+
+
+
+static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+
+        ImGuiViewport *viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->Pos);
+        ImGui::SetNextWindowSize(viewport->Size);
+        ImGui::SetNextWindowViewport(viewport->ID);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+        if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+            window_flags |= ImGuiWindowFlags_NoBackground;
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+        ImGui::Begin("DockSpace", nullptr, window_flags);
+        ImGui::PopStyleVar();
+        ImGui::PopStyleVar(2);
+
+        // DockSpace
+        ImGuiIO &io = ImGui::GetIO();
+        if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+        {
+            ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+
+            static auto first_time = true;
+            if (first_time)
+            {
+                first_time = false;
+
+                ImGui::DockBuilderRemoveNode(dockspace_id); // clear any previous layout
+                ImGui::DockBuilderAddNode(dockspace_id, dockspace_flags | ImGuiDockNodeFlags_DockSpace);
+                ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->Size);
+
+                auto dock_id_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id);
+                ImGui::DockBuilderDockWindow("Control Panel", dock_id_right);
+                ImGui::DockBuilderDockWindow("Relight window", dockspace_id);
+                ImGui::DockBuilderFinish(dockspace_id);
+            }
+        }
+
+        ImGui::End();
+
+
+int m_width = 500;
+int m_height = 500;
+  bool open = false;
+    ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_Once);
+    ImGui::Begin("dd" );
+
+            ImVec2 availableSize = ImGui::GetContentRegionAvail();
+            ImGuiID dockspace_id = ImGui::GetID("RelightDockSpace");
+            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+
+            static auto first_time = true;
+            if (first_time)
+            {
+                first_time = false;
+
+                ImGui::DockBuilderRemoveNode(dockspace_id); // clear any previous layout
+                ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_PassthruCentralNode | ImGuiDockNodeFlags_DockSpace);
+                ImGui::DockBuilderSetNodeSize(dockspace_id, availableSize);
+
+                auto dock_id_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id);
+
+                ImGui::DockBuilderDockWindow("Debug window", dock_id_right);
+                ImGui::DockBuilderFinish(dockspace_id);
+            }
+        
+    if ( ImGui::IsMouseReleased( ImGuiMouseButton_Left) || m_width == 0 ){
+        // std::cout << availableSize.x << " " << availableSize.y << std::endl;
+        // should I resize my FBO here
+        if (availableSize.x != m_width || availableSize.y != m_height)
+        {
+            m_width = availableSize.x;
+            m_height = availableSize.y;
+            //m_isFrameBufferDirty = true;
+            //onResize(m_width, m_height);
+        }
+    }
+    //draw FBO
+   // ImGui::Image((void *)m_frameBufferTextureID, availableSize, ImVec2(0, 1),ImVec2(1, 0));
+    ImGui::End();
+
+
+
+
+//https://github.com/ocornut/imgui/issues/4430
+
+
+
+
+
+
+
+
+
+
+
 
     // the sokol_gfx draw pass
     sg_begin_default_pass(&pass_action, width, height);

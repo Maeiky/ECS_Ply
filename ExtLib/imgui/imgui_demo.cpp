@@ -7418,7 +7418,7 @@ static void ShowExampleAppSimpleOverlay(bool* p_open)
 //-----------------------------------------------------------------------------
 // [SECTION] Example App: Fullscreen window / ShowExampleAppFullscreen()
 //-----------------------------------------------------------------------------
-
+extern IMGUI_API ImGuiContext* GImGui;  
 // Demonstrate creating a window covering the entire screen/viewport
 static void ShowExampleAppFullscreen(bool* p_open)
 {
@@ -7448,6 +7448,11 @@ static void ShowExampleAppFullscreen(bool* p_open)
         if (p_open && ImGui::Button("Close this window"))
             *p_open = false;
     }
+	/*
+	    ImGuiContext& g = *GImGui;
+		ImGuiWindow* window = g.CurrentWindow;
+		BringWindowToDisplayBack(window);
+		*/
     ImGui::End();
 }
 
