@@ -1,0 +1,33 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build [Command Line]",
+            "type": "shell",
+            "command": "cmd",
+            "args": ["/C",
+                "cwc\\Make_for_Windows [Debug].cwMake"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Build [GUI]",
+            "type": "shell",
+            "command": "explorer",
+            "args": [
+                "cwc\\Make_for_Windows [Debug].cwMake"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
