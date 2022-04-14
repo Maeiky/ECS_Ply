@@ -124,6 +124,7 @@ ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspaceFlags);
 
 static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+        //ImGuiWindowFlags window_flags =  ImGuiWindowFlags_NoDocking;
 
         ImGuiViewport *viewport = ImGui::GetMainViewport();
         ImGui::SetNextWindowPos(viewport->Pos);
@@ -164,6 +165,48 @@ static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNo
                 ImGui::DockBuilderFinish(dockspace_id);
             }
         }
+
+
+bool p_open_ = true;
+bool* p_open = &p_open_;
+
+    // Variables to configure the Dockspace example.
+    static bool opt_fullscreen = true; // Is the Dockspace full-screen?
+    static bool opt_padding = false; // Is there padding (a blank space) between the window edge and the Dockspace?
+
+
+if (ImGui::BeginMenuBar())
+    {
+        if (ImGui::BeginMenu("Options"))
+        {
+            // Disabling fullscreen would allow the window to be moved to the front of other windows,
+            // which we can't undo at the moment without finer window depth/z control.
+            ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
+            ImGui::MenuItem("Padding", NULL, &opt_padding);
+            ImGui::Separator();
+
+            // Display a menu item for each Dockspace flag, clicking on one will toggle its assigned flag.
+            if (ImGui::MenuItem("Flag: NoSplit",                "", (dockspace_flags & ImGuiDockNodeFlags_NoSplit) != 0))                 { dockspace_flags ^= ImGuiDockNodeFlags_NoSplit; }
+            if (ImGui::MenuItem("Flag: NoResize",               "", (dockspace_flags & ImGuiDockNodeFlags_NoResize) != 0))                { dockspace_flags ^= ImGuiDockNodeFlags_NoResize; }
+            if (ImGui::MenuItem("Flag: NoDockingInCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingInCentralNode) != 0))  { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingInCentralNode; }
+            if (ImGui::MenuItem("Flag: AutoHideTabBar",         "", (dockspace_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0))          { dockspace_flags ^= ImGuiDockNodeFlags_AutoHideTabBar; }
+            if (ImGui::MenuItem("Flag: PassthruCentralNode",    "", (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) != 0, opt_fullscreen)) { dockspace_flags ^= ImGuiDockNodeFlags_PassthruCentralNode; }
+            ImGui::Separator();
+
+            // Display a menu item to close this example.
+            if (ImGui::MenuItem("Close", NULL, false, p_open != NULL))
+                if (p_open != NULL) // Remove MSVC warning C6011 (NULL dereference) - the `p_open != NULL` in MenuItem() does prevent NULL derefs, but IntelliSense doesn't analyze that deep so we need to add this in ourselves.
+                    *p_open = false; // Changing this variable to false will close the parent window, therefore closing the Dockspace as well.
+            ImGui::EndMenu();
+        }
+
+       
+        ImGui::EndMenuBar();
+    }
+
+
+
+
 
         ImGui::End();
 
@@ -208,6 +251,45 @@ int m_height = 500;
    // ImGui::Image((void *)m_frameBufferTextureID, availableSize, ImVec2(0, 1),ImVec2(1, 0));
     ImGui::End();
 
+
+
+
+    ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_Once);
+    ImGui::Begin("aa" );
+
+           // ImVec2 availableSize = ImGui::GetContentRegionAvail();
+           ImGuiID dockspace_id2 = ImGui::GetID("RelightDockSpace2");
+            ImGui::DockSpace(dockspace_id2, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+
+            static auto first_time2 = true;
+            if (first_time2)
+            {
+                first_time2 = false;
+
+                ImGui::DockBuilderRemoveNode(dockspace_id2); // clear any previous layout
+                ImGui::DockBuilderAddNode(dockspace_id2, ImGuiDockNodeFlags_PassthruCentralNode | ImGuiDockNodeFlags_DockSpace);
+                ImGui::DockBuilderSetNodeSize(dockspace_id2, availableSize);
+
+                auto dock_id_right = ImGui::DockBuilderSplitNode(dockspace_id2, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id2);
+
+                ImGui::DockBuilderDockWindow("Debug window", dock_id_right);
+                ImGui::DockBuilderFinish(dockspace_id2);
+            }
+        
+    if ( ImGui::IsMouseReleased( ImGuiMouseButton_Left) || m_width == 0 ){
+        // std::cout << availableSize.x << " " << availableSize.y << std::endl;
+        // should I resize my FBO here
+        if (availableSize.x != m_width || availableSize.y != m_height)
+        {
+            m_width = availableSize.x;
+            m_height = availableSize.y;
+            //m_isFrameBufferDirty = true;
+            //onResize(m_width, m_height);
+        }
+    }
+    //draw FBO
+   // ImGui::Image((void *)m_frameBufferTextureID, availableSize, ImVec2(0, 1),ImVec2(1, 0));
+    ImGui::End();
 
 
 
