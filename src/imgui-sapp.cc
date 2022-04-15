@@ -54,7 +54,9 @@ extern "C" void iniImGUI(void) {
 
 extern "C" void frame_scene();
  #include "imgui_internal.h" 
-extern "C" void frameImGUI(void) {
+
+
+extern "C" void frameImGUI(sg_pass_action* main_pass) {
 	
     const int width = sapp_width();
     const int height = sapp_height();
@@ -62,46 +64,10 @@ extern "C" void frameImGUI(void) {
 
 
 
-  
-///////////
-/*
-
-ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
-ImGuiID dockspaceID = ImGui::GetID("MyDockSpace");
-if (!ImGui::DockBuilderGetNode(dockspaceID)) {
-	ImGui::DockBuilderRemoveNode(dockspaceID);
-	ImGui::DockBuilderAddNode(dockspaceID, ImGuiDockNodeFlags_None);
-
-	ImGuiID dock_main_id = dockspaceID;
-	ImGuiID dock_up_id = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.05f, nullptr, &dock_main_id);
-	ImGuiID dock_right_id = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.2f, nullptr, &dock_main_id);
-	ImGuiID dock_left_id = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.2f, nullptr, &dock_main_id);
-	ImGuiID dock_down_id = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.2f, nullptr, &dock_main_id);
-	ImGuiID dock_down_right_id = ImGui::DockBuilderSplitNode(dock_down_id, ImGuiDir_Right, 0.6f, nullptr, &dock_down_id);
-
-	ImGui::DockBuilderDockWindow("Actions", dock_up_id);
-	ImGui::DockBuilderDockWindow("Hierarchy", dock_right_id);
-	ImGui::DockBuilderDockWindow("Inspector", dock_left_id);
-	ImGui::DockBuilderDockWindow("Console", dock_down_id);
-	ImGui::DockBuilderDockWindow("Project", dock_down_right_id);
-	ImGui::DockBuilderDockWindow("Scene", dock_main_id);
-
-        // Disable tab bar for custom toolbar
-	ImGuiDockNode* node = ImGui::DockBuilderGetNode(dock_up_id);
-	node->LocalFlags |= ImGuiDockNodeFlags_NoTabBar;
-
-	ImGui::DockBuilderFinish(dock_main_id);
-}
-ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspaceFlags);
-/////////////////
-*/
 
 ImGui::GetStyle().Colors[ImGuiCol_DockingEmptyBg]  =ImVec4(0.20f, 0.20f, 0.20f, 0.50f);
 
-
-//static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
-static ImGuiDockNodeFlags dockspace_flags = 0;
-
+    static ImGuiDockNodeFlags dockspace_flags = 0; //ImGuiDockNodeFlags_PassthruCentralNode
 
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
         //ImGuiWindowFlags window_flags =  ImGuiWindowFlags_NoDocking;
@@ -129,7 +95,7 @@ static ImGuiDockNodeFlags dockspace_flags = 0;
         {
             ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
             ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-
+/*
             static auto first_time = true;
             if (first_time)
             {
@@ -143,7 +109,7 @@ static ImGuiDockNodeFlags dockspace_flags = 0;
                 ImGui::DockBuilderDockWindow("Control Panel", dock_id_right);
                 ImGui::DockBuilderDockWindow("Relight window", dockspace_id);
                 ImGui::DockBuilderFinish(dockspace_id);
-            }
+            }*/
         }
 
 
@@ -156,7 +122,10 @@ static ImGuiDockNodeFlags dockspace_flags = 0;
     static float f = 0.0f;
     ImGui::Text("Hello, world!");
     ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-    ImGui::ColorEdit3("clear color", &pass_action.colors[0].value.r);
+   // ImGui::ColorEdit3("clear color", &pass_action.colors[0].value.r);
+     ImGui::ColorEdit3("clear color", &main_pass->colors[0].value.r);
+
+
     if (ImGui::Button("Test Window")) show_test_window ^= 1;
     if (ImGui::Button("Another Window")) show_another_window ^= 1;
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

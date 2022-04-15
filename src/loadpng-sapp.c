@@ -28,7 +28,8 @@ static struct {
     sg_pass_action pass_action;
     sg_pipeline pip;
     sg_bindings bind;
-    uint8_t file_buffer[256 * 1024];
+  //  uint8_t file_buffer[256 * 1024];
+    uint8_t file_buffer[1024 * 1024];
 } state;
 
 typedef struct {
@@ -134,7 +135,16 @@ static void init(void) {
             .compare = SG_COMPAREFUNC_LESS_EQUAL,
             .write_enabled = true
         },
-        .label = "cube-pipeline"
+        .label = "cube-pipeline",
+         .colors[0] = {
+        .write_mask = SG_COLORMASK_RGB,
+        .blend = {
+            .enabled = true,
+            .src_factor_rgb = SG_BLENDFACTOR_SRC_ALPHA,
+            .dst_factor_rgb = SG_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
+        }
+        }
+
     });
 
     /* start loading the PNG file, we don't need the returned handle since
@@ -195,7 +205,7 @@ static void fetch_callback(const sfetch_response_t* response) {
 }
 
 
-void frameImGUI(void);
+void frameImGUI(sg_pass_action* main_pass);
 void endframeImGUI(void);
 
 /* The frame-function is fairly boring, note that no special handling is
@@ -209,6 +219,12 @@ void endframeImGUI(void);
 
     /* pump the sokol-fetch message queues, and invoke response callbacks */
     sfetch_dowork();
+/*
+    state.pass_action = (sg_pass_action) {
+        .colors[0] = { .action = SG_ACTION_CLEAR, .value = { 1.125f, 0.25f, 0.35f, 1.0f } }
+    };*/
+
+
 
     /* compute model-view-projection matrix for vertex shader */
     const float t = (float)(sapp_frame_duration() * 60.0);
@@ -216,7 +232,7 @@ void endframeImGUI(void);
     hmm_mat4 view = HMM_LookAt(HMM_Vec3(0.0f, 1.5f, 6.0f), HMM_Vec3(0.0f, 0.0f, 0.0f), HMM_Vec3(0.0f, 1.0f, 0.0f));
     hmm_mat4 view_proj = HMM_MultiplyMat4(proj, view);
     vs_params_t vs_params;
-    state.rx += 1.0f * t; state.ry += 2.0f * t;
+    state.rx += 0.78f * t; state.ry += 0.0823f * t;
     hmm_mat4 rxm = HMM_Rotate(state.rx, HMM_Vec3(1.0f, 0.0f, 0.0f));
     hmm_mat4 rym = HMM_Rotate(state.ry, HMM_Vec3(0.0f, 1.0f, 0.0f));
     hmm_mat4 model = HMM_MultiplyMat4(rxm, rym);
@@ -235,7 +251,7 @@ void endframeImGUI(void);
 static void frame(void) {
 	
     frame_scene();
-	frameImGUI();
+	frameImGUI(&state.pass_action);
 	
 
     sg_commit();

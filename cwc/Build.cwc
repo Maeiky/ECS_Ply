@@ -2,8 +2,6 @@
 >
 -{vWebRT_Shell}={vWebRT_Shell_Dir}Fullscreen/Fullscreen.s_html
 >
--{_sOpt}={sOpt}
->
 -{pSrc}=../src/
 -{pExtLib}=../ExtLib/
 -{pSokol}={pExtLib}/sokol/
