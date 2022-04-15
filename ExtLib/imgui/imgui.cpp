@@ -15078,10 +15078,11 @@ static void ImGui::DockNodeUpdate(ImGuiDockNode* node)
     if (render_dockspace_bg && node->IsVisible)
     {
         host_window->DrawList->ChannelsSetCurrent(0);
-        if (central_node_hole)
+        if (central_node_hole){
             RenderRectFilledWithHole(host_window->DrawList, node->Rect(), central_node->Rect(), GetColorU32(ImGuiCol_WindowBg), 0.0f);
-        else
+        }else{
             host_window->DrawList->AddRectFilled(node->Pos, node->Pos + node->Size, GetColorU32(ImGuiCol_WindowBg), 0.0f);
+        }
     }
 
     // Draw and populate Tab Bar

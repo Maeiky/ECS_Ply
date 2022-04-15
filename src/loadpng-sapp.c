@@ -203,10 +203,10 @@ void endframeImGUI(void);
    Also note the sfetch_dowork() function, this is usually called once a
    frame to pump the sokol-fetch message queues.
 */
-static void frame(void) {
-	
-	
-	
+
+
+ void frame_scene(void) {
+
     /* pump the sokol-fetch message queues, and invoke response callbacks */
     sfetch_dowork();
 
@@ -230,12 +230,15 @@ static void frame(void) {
     __dbgui_draw();
 	    sg_end_pass();
 		
-		
+}
+
+static void frame(void) {
+	
+    frame_scene();
 	frameImGUI();
 	
 
     sg_commit();
-	
 	endframeImGUI();
 }
 

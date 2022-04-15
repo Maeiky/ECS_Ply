@@ -1,5 +1,7 @@
 -#Run _Default_Config.cwc
 >
+-{vWebRT_Shell}={vWebRT_Shell_Dir}Fullscreen/Fullscreen.s_html
+>
 -{_sOpt}={sOpt}
 >
 -{pSrc}=../src/
@@ -41,6 +43,7 @@ shdc --input {pSrc}/{sShader}.glsl --output {sShader}.glsl.h --slang glsl330:gls
 -c &{pExtLib}imgui/ -o {pObj}imgui/
 -I {pExtLib}imgui/
 -I {pExtLib}Freetype/
+-{vIncl}
 >
 ;Link
 -o {pObj} -#To {pOut}{sName}.* -{vLink} 

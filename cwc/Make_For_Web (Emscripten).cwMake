@@ -2,6 +2,8 @@
 >
 -{sToolChainName}=WebRT
 >
+-{sName}=ECS_Ply_Emsc
+>
 -{_sOpt}="OS"
 >
 -{vOS_FlagLink}=-s USE_WEBGL2=1 |

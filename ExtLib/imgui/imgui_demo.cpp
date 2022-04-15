@@ -77,6 +77,9 @@ Index of this file:
 #endif
 
 #include "imgui.h"
+#include "style/imgui_style.h"
+
+
 #ifndef IMGUI_DISABLE
 
 // System includes
@@ -6170,6 +6173,8 @@ void ImGui::ShowFontSelector(const char* label)
         "- If you need to add/remove fonts at runtime (e.g. for DPI change), do it before calling NewFrame().");
 }
 
+
+
 // Demo helper function to select among default colors. See ShowStyleEditor() for more advanced options.
 // Here we use the simplified Combo() api that packs items into a single literal string.
 // Useful for quick combo boxes where the choices are known locally.
@@ -6178,12 +6183,18 @@ bool ImGui::ShowStyleSelector(const char* label)
     static int style_idx = -1;
     if (ImGui::Combo(label, &style_idx, "Dark\0Light\0Classic\0"))
     {
+
+        StyleImGui::SetStyle(label);
+
+/*
         switch (style_idx)
         {
         case 0: ImGui::StyleColorsDark(); break;
         case 1: ImGui::StyleColorsLight(); break;
         case 2: ImGui::StyleColorsClassic(); break;
         }
+*/
+
         return true;
     }
     return false;
@@ -7646,7 +7657,7 @@ static void ShowExampleAppCustomRendering(bool* p_open)
             // Draw border and background color
             ImGuiIO& io = ImGui::GetIO();
             ImDrawList* draw_list = ImGui::GetWindowDrawList();
-            draw_list->AddRectFilled(canvas_p0, canvas_p1, IM_COL32(50, 50, 50, 255));
+            draw_list->AddRectFilled(canvas_p0, canvas_p1, IM_COL32(50, 50, 50, 0.5));
             draw_list->AddRect(canvas_p0, canvas_p1, IM_COL32(255, 255, 255, 255));
 
             // This will catch our interactions

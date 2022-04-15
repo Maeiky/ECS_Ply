@@ -51,6 +51,8 @@ extern "C" void iniImGUI(void) {
     pass_action.colors[0].action = SG_ACTION_LOAD;
     pass_action.colors[0].value = { 0.0f, 0.5f, 0.7f, 0.0f };
 }
+
+extern "C" void frame_scene();
  #include "imgui_internal.h" 
 extern "C" void frameImGUI(void) {
 	
@@ -58,35 +60,9 @@ extern "C" void frameImGUI(void) {
     const int height = sapp_height();
     simgui_new_frame({ width, height, sapp_frame_duration(), sapp_dpi_scale() });
 
-    // 1. Show a simple window
-    // Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
-    static float f = 0.0f;
-    ImGui::Text("Hello, world!");
-    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-    ImGui::ColorEdit3("clear color", &pass_action.colors[0].value.r);
-    if (ImGui::Button("Test Window")) show_test_window ^= 1;
-    if (ImGui::Button("Another Window")) show_another_window ^= 1;
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-    ImGui::Text("w: %d, h: %d, dpi_scale: %.1f", sapp_width(), sapp_height(), sapp_dpi_scale());
-    if (ImGui::Button(sapp_is_fullscreen() ? "Switch to windowed" : "Switch to fullscreen")) {
-        sapp_toggle_fullscreen();
-    }
 
-    // 2. Show another simple window, this time using an explicit Begin/End pair
-    if (show_another_window) {
-        ImGui::SetNextWindowSize(ImVec2(200,100), ImGuiCond_FirstUseEver);
-        ImGui::Begin("Another Window", &show_another_window);
-        ImGui::Text("Hello");
 
-        ImGui::End();
-    }
-
-    // 3. Show the ImGui test window. Most of the sample code is in ImGui::ShowDemoWindow()
-    if (show_test_window) {
-        ImGui::SetNextWindowPos(ImVec2(460, 20), ImGuiCond_FirstUseEver);
-        ImGui::ShowDemoWindow();
-    }
-
+  
 ///////////
 /*
 
@@ -120,9 +96,13 @@ ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspaceFlags);
 /////////////////
 */
 
+ImGui::GetStyle().Colors[ImGuiCol_DockingEmptyBg]  =ImVec4(0.20f, 0.20f, 0.20f, 0.50f);
 
 
-static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+//static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+static ImGuiDockNodeFlags dockspace_flags = 0;
+
+
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
         //ImGuiWindowFlags window_flags =  ImGuiWindowFlags_NoDocking;
 
@@ -135,7 +115,7 @@ static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNo
         window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
-        if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+      //  if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
             window_flags |= ImGuiWindowFlags_NoBackground;
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
@@ -156,7 +136,7 @@ static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNo
                 first_time = false;
 
                 ImGui::DockBuilderRemoveNode(dockspace_id); // clear any previous layout
-                ImGui::DockBuilderAddNode(dockspace_id, dockspace_flags | ImGuiDockNodeFlags_DockSpace);
+                ImGui::DockBuilderAddNode(dockspace_id, dockspace_flags | ImGuiDockNodeFlags_DockSpace ) ;
                 ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->Size);
 
                 auto dock_id_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id);
@@ -165,6 +145,47 @@ static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNo
                 ImGui::DockBuilderFinish(dockspace_id);
             }
         }
+
+
+
+    // 1. Show a simple window
+    // Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
+
+            ImGui::Begin("DBG, &show_another_window");
+
+    static float f = 0.0f;
+    ImGui::Text("Hello, world!");
+    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+    ImGui::ColorEdit3("clear color", &pass_action.colors[0].value.r);
+    if (ImGui::Button("Test Window")) show_test_window ^= 1;
+    if (ImGui::Button("Another Window")) show_another_window ^= 1;
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    ImGui::Text("w: %d, h: %d, dpi_scale: %.1f", sapp_width(), sapp_height(), sapp_dpi_scale());
+    if (ImGui::Button(sapp_is_fullscreen() ? "Switch to windowed" : "Switch to fullscreen")) {
+        sapp_toggle_fullscreen();
+    }
+           ImGui::End();
+
+  // 2. Show another simple window, this time using an explicit Begin/End pair
+    if (show_another_window) {
+        ImGui::SetNextWindowSize(ImVec2(200,100), ImGuiCond_FirstUseEver);
+        ImGui::Begin("Another Window", &show_another_window);
+        ImGui::Text("Hello");
+
+        ImGui::End();
+    }
+
+    // 3. Show the ImGui test window. Most of the sample code is in ImGui::ShowDemoWindow()
+    if (show_test_window) {
+        ImGui::SetNextWindowPos(ImVec2(460, 20), ImGuiCond_FirstUseEver);
+        ImGui::ShowDemoWindow();
+    }
+/////////
+
+
+
+
+
 
 
 bool p_open_ = true;
@@ -203,24 +224,39 @@ if (ImGui::BeginMenuBar())
        
         ImGui::EndMenuBar();
     }
-
-
-
-
-
         ImGui::End();
+
+
+
+
+//ImGui::StyleColorsLight();
+
+//ImGui::GetStyle().Colors[ImGuiCol_ChildBg]  = ImVec4(0.0f, 0.0f, 0.0f, 0.00f);
+//ImGui::GetStyle().Colors[ImGuiCol_WindowBg]  = ImVec4(0.0f, 0.0f, 1.0f, 0.0f);
+//ImGui::GetStyle().Colors[ImGuiCol_FrameBg]  = ImVec4(0.0f, 0.0f, 0.0f, 0.00f);
 
 
 int m_width = 500;
 int m_height = 500;
   bool open = false;
+
+   window_flags =   ImGuiWindowFlags_NoBackground           ;
+
     ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_Once);
-    ImGui::Begin("dd" );
+           //ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 0.0f, 0.0f, 0.0f)); // Set window background to red
+         //  ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 0.0f, 0.0f, 0.0f)); // Set window background to red
+
+ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 1.0f, 0.0f));
+    ImGui::Begin("dd" , &open, window_flags);
+       ImGui::PopStyleColor();
+
+  
+
 
             ImVec2 availableSize = ImGui::GetContentRegionAvail();
-            ImGuiID dockspace_id = ImGui::GetID("RelightDockSpace");
-            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
-
+            ImGuiID dockspace_id = ImGui::GetID("RelightDockSpace99");
+            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), 0);
+/*
             static auto first_time = true;
             if (first_time)
             {
@@ -235,47 +271,47 @@ int m_height = 500;
                 ImGui::DockBuilderDockWindow("Debug window", dock_id_right);
                 ImGui::DockBuilderFinish(dockspace_id);
             }
-        
-    if ( ImGui::IsMouseReleased( ImGuiMouseButton_Left) || m_width == 0 ){
-        // std::cout << availableSize.x << " " << availableSize.y << std::endl;
-        // should I resize my FBO here
-        if (availableSize.x != m_width || availableSize.y != m_height)
-        {
-            m_width = availableSize.x;
-            m_height = availableSize.y;
-            //m_isFrameBufferDirty = true;
-            //onResize(m_width, m_height);
-        }
-    }
+        */
+    
     //draw FBO
+
+
    // ImGui::Image((void *)m_frameBufferTextureID, availableSize, ImVec2(0, 1),ImVec2(1, 0));
     ImGui::End();
+ //ImGui::PopStyleColor();
 
-
-
+//ImGui::StyleColorsDark();
 
     ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_Once);
+	
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 1.0f, 0.0f));
     ImGui::Begin("aa" );
+      ImGui::PopStyleColor();
+//ImGuiDockNodeFlags_PassthruCentralNode
 
            // ImVec2 availableSize = ImGui::GetContentRegionAvail();
            ImGuiID dockspace_id2 = ImGui::GetID("RelightDockSpace2");
+            //ImGui::DockSpace(dockspace_id2, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
             ImGui::DockSpace(dockspace_id2, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
-
+/*
             static auto first_time2 = true;
             if (first_time2)
             {
                 first_time2 = false;
 
                 ImGui::DockBuilderRemoveNode(dockspace_id2); // clear any previous layout
-                ImGui::DockBuilderAddNode(dockspace_id2, ImGuiDockNodeFlags_PassthruCentralNode | ImGuiDockNodeFlags_DockSpace);
+              //  ImGui::DockBuilderAddNode(dockspace_id2, ImGuiDockNodeFlags_PassthruCentralNode | ImGuiDockNodeFlags_DockSpace);
+                 ImGui::DockBuilderAddNode(dockspace_id2, ImGuiDockNodeFlags_PassthruCentralNode | ImGuiDockNodeFlags_DockSpace);
                 ImGui::DockBuilderSetNodeSize(dockspace_id2, availableSize);
 
                 auto dock_id_right = ImGui::DockBuilderSplitNode(dockspace_id2, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id2);
 
                 ImGui::DockBuilderDockWindow("Debug window", dock_id_right);
                 ImGui::DockBuilderFinish(dockspace_id2);
-            }
-        
+            }*/
+
+
+        /*
     if ( ImGui::IsMouseReleased( ImGuiMouseButton_Left) || m_width == 0 ){
         // std::cout << availableSize.x << " " << availableSize.y << std::endl;
         // should I resize my FBO here
@@ -287,6 +323,12 @@ int m_height = 500;
             //onResize(m_width, m_height);
         }
     }
+*/
+
+
+//ImGui::StyleColorsDark();
+
+    
     //draw FBO
    // ImGui::Image((void *)m_frameBufferTextureID, availableSize, ImVec2(0, 1),ImVec2(1, 0));
     ImGui::End();
@@ -300,12 +342,6 @@ int m_height = 500;
 
 
 
-
-
-
-
-
-
     // the sokol_gfx draw pass
     sg_begin_default_pass(&pass_action, width, height);
     simgui_render();
@@ -313,8 +349,62 @@ int m_height = 500;
    // sg_commit();
    
    
-  
 
+/*
+
+/////////////////////////////
+/////////////////////////////////
+    simgui_new_frame({ width, height, sapp_frame_duration(), sapp_dpi_scale() });
+ // the sokol_gfx draw pass
+
+
+
+
+    ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_Once);
+    ImGui::Begin("gggg" );
+
+           // ImVec2 availableSize = ImGui::GetContentRegionAvail();
+           ImGuiID dockspace_id3 = ImGui::GetID("RelightDockSpace3");
+            ImGui::DockSpace(dockspace_id3, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+
+            static auto first_time3 = true;
+            if (first_time3)
+            {
+                first_time3 = false;
+
+                ImGui::DockBuilderRemoveNode(dockspace_id3); // clear any previous layout
+                ImGui::DockBuilderAddNode(dockspace_id3, ImGuiDockNodeFlags_PassthruCentralNode | ImGuiDockNodeFlags_DockSpace);
+                ImGui::DockBuilderSetNodeSize(dockspace_id3, availableSize);
+
+                auto dock_id_right = ImGui::DockBuilderSplitNode(dockspace_id3, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id3);
+
+                ImGui::DockBuilderDockWindow("Debug window", dock_id_right);
+                ImGui::DockBuilderFinish(dockspace_id3);
+            }
+        
+    if ( ImGui::IsMouseReleased( ImGuiMouseButton_Left) || m_width == 0 ){
+        // std::cout << availableSize.x << " " << availableSize.y << std::endl;
+        // should I resize my FBO here
+        if (availableSize.x != m_width || availableSize.y != m_height)
+        {
+            m_width = availableSize.x;
+            m_height = availableSize.y;
+            //m_isFrameBufferDirty = true;
+            //onResize(m_width, m_height);
+        }
+    }
+// ImGui::Image((void *)m_frameBufferTextureID, availableSize, ImVec2(0, 1),ImVec2(1, 0));
+    ImGui::End();
+
+
+
+
+    //sg_begin_default_pass(&pass_action, width, height);
+    simgui_render();
+    sg_end_pass();
+   // sg_commit();
+  
+*/
 }
 
 
