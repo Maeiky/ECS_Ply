@@ -178,7 +178,7 @@ Index of this file:
 static void ShowExampleAppDockSpace(bool* p_open);
 static void ShowExampleAppDocuments(bool* p_open);
 static void ShowExampleAppMainMenuBar();
-static void ShowExampleAppConsole(bool* p_open);
+ void ShowExampleAppConsole(bool* p_open);
 static void ShowExampleAppLog(bool* p_open);
 static void ShowExampleAppLayout(bool* p_open);
 static void ShowExampleAppPropertyEditor(bool* p_open);
@@ -6917,7 +6917,7 @@ struct ExampleAppConsole
     }
 };
 
-static void ShowExampleAppConsole(bool* p_open)
+ void ShowExampleAppConsole(bool* p_open)
 {
     static ExampleAppConsole console;
     console.Draw("Example: Console", p_open);
