@@ -168,6 +168,11 @@ void CreateDockingSpace(){
 	// out_id_at_opposite_dir is in the opposite direction
 
 
+            ImGui::DockBuilderDockWindow("Debug",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id));
+
+            ImGui::DockBuilderDockWindow("Metrics",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id));
+            ImGui::DockBuilderDockWindow("Stack",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id));
+
             ImGui::DockBuilderDockWindow("Style Editor",    ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.2f,  nullptr, &dockspace_id));
             ImGui::DockBuilderDockWindow("Console",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 0.25f, nullptr, &dockspace_id));
             ImGui::DockBuilderDockWindow("###Scene",        dockspace_id);
