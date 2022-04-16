@@ -17626,7 +17626,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
     if (cfg->ShowStackTool)
         ShowStackToolWindow(&cfg->ShowStackTool);
 
-    if (!Begin("Dear ImGui Metrics/Debugger", p_open) || GetCurrentWindow()->BeginCount > 1)
+    if (!Begin("Metrics", p_open) || GetCurrentWindow()->BeginCount > 1)
     {
         End();
         return;
@@ -18771,7 +18771,7 @@ void ImGui::ShowStackToolWindow(bool* p_open)
     ImGuiContext& g = *GImGui;
     if (!(g.NextWindowData.Flags & ImGuiNextWindowDataFlags_HasSize))
         SetNextWindowSize(ImVec2(0.0f, GetFontSize() * 8.0f), ImGuiCond_FirstUseEver);
-    if (!Begin("Dear ImGui Stack Tool", p_open) || GetCurrentWindow()->BeginCount > 1)
+    if (!Begin("Stack", p_open) || GetCurrentWindow()->BeginCount > 1)
     {
         End();
         return;

@@ -56,6 +56,50 @@ extern "C" void iniImGUI(void) {
     pass_action.colors[0].value = { 0.0f, 0.5f, 0.7f, 0.0f };
 }
 
+
+
+
+void CreateMenuBar(){
+
+    static ImGuiDockNodeFlags dockspace_flags = 0;
+    bool p_open_ = true;
+    bool* p_open = &p_open_;
+
+    // Variables to configure the Dockspace example.
+    static bool opt_fullscreen = true; // Is the Dockspace full-screen?
+    static bool opt_padding = false; // Is there padding (a blank space) between the window edge and the Dockspace?
+
+    if (ImGui::BeginMenuBar())
+    {
+        if (ImGui::BeginMenu("Options"))
+        {
+            // Disabling fullscreen would allow the window to be moved to the front of other windows,
+            // which we can't undo at the moment without finer window depth/z control.
+            ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
+            ImGui::MenuItem("Padding", NULL, &opt_padding);
+            ImGui::Separator();
+
+            // Display a menu item for each Dockspace flag, clicking on one will toggle its assigned flag.
+            if (ImGui::MenuItem("Flag: NoSplit",                "", (dockspace_flags & ImGuiDockNodeFlags_NoSplit) != 0))                 { dockspace_flags ^= ImGuiDockNodeFlags_NoSplit; }
+            if (ImGui::MenuItem("Flag: NoResize",               "", (dockspace_flags & ImGuiDockNodeFlags_NoResize) != 0))                { dockspace_flags ^= ImGuiDockNodeFlags_NoResize; }
+            if (ImGui::MenuItem("Flag: NoDockingInCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingInCentralNode) != 0))  { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingInCentralNode; }
+            if (ImGui::MenuItem("Flag: AutoHideTabBar",         "", (dockspace_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0))          { dockspace_flags ^= ImGuiDockNodeFlags_AutoHideTabBar; }
+            if (ImGui::MenuItem("Flag: PassthruCentralNode",    "", (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) != 0, opt_fullscreen)) { dockspace_flags ^= ImGuiDockNodeFlags_PassthruCentralNode; }
+            ImGui::Separator();
+
+            // Display a menu item to close this example.
+            if (ImGui::MenuItem("Close", NULL, false, p_open != NULL))
+                if (p_open != NULL) // Remove MSVC warning C6011 (NULL dereference) - the `p_open != NULL` in MenuItem() does prevent NULL derefs, but IntelliSense doesn't analyze that deep so we need to add this in ourselves.
+                    *p_open = false; // Changing this variable to false will close the parent window, therefore closing the Dockspace as well.
+            ImGui::EndMenu();
+        }
+
+        ImGui::EndMenuBar();
+    }
+
+}
+
+
 extern "C" void frame_scene();
  #include "imgui_internal.h" 
 
@@ -122,17 +166,13 @@ void CreateDockingSpace(){
 	// will be returned by the function)
 	// out_id_at_dir is the id of the node in the direction we specified earlier,
 	// out_id_at_opposite_dir is in the opposite direction
-	auto dock_id_top = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Up, 0.2f, nullptr, &dockspace_id);
-	auto dock_id_down = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 0.25f, nullptr, &dockspace_id);
-	auto dock_id_left = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.2f, nullptr, &dockspace_id);
-	auto dock_id_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.15f, nullptr, &dockspace_id);
-	//auto dock_id_left2 = ImGui::DockBuilderSplitNode(dock_id_left, ImGuiDir_Down, 0.2f, nullptr, &dock_id_left);
-	//auto dock_id_down2 = ImGui::DockBuilderSplitNode(dock_id_down, ImGuiDir_Right, 0.15f, nullptr, &dock_id_down);
 
 
+            ImGui::DockBuilderDockWindow("Style Editor",    ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.2f,  nullptr, &dockspace_id));
+            ImGui::DockBuilderDockWindow("Console",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 0.25f, nullptr, &dockspace_id));
+            ImGui::DockBuilderDockWindow("###Scene",        dockspace_id);
 
 
-            ImGui::DockBuilderDockWindow("###Scene", dock_id_right);
 
 
             ImGui::DockBuilderFinish(dockspace_id);
@@ -169,19 +209,8 @@ ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->Size);
 	ImGui::DockBuilderFinish(dockspace_id);
 */
 
-
-   ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiCond_Once);
-
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 1.0f, 0.0f));
-    ImGui::Begin("test");
-    ImGui::PopStyleColor();
-    //ImGuiDockNodeFlags_PassthruCentralNode
-
-    //ImGui::DockBuilderDockWindow("Scene", dock_id_right);
+    CreateMenuBar();
     ImGui::End();
-
-    //  ImGui::DockBuilderDockWindow("test", dockspace_id);
-
 
 
 }
@@ -191,15 +220,15 @@ ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->Size);
 void CreateContextWindow(){
 
 
-    ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_Once);
+    //ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_Once);
 
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 1.0f, 0.0f));
 
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+   // ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
     char buf[128];
     sprintf(buf, "Scene, Fps:%.2f %c Frame:%d  ###Scene", ImGui::GetIO().Framerate, "|/-\\"[(int)(ImGui::GetTime() / 0.25f) & 3], ImGui::GetFrameCount());
 
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 1.0f, 0.0f));
     ImGui::Begin(buf);
     ImGui::PopStyleColor();
     //ImGuiDockNodeFlags_PassthruCentralNode
@@ -258,49 +287,6 @@ void CreateContextWindow(){
 
 
 
-void CreateMenuBar(){
-
-    static ImGuiDockNodeFlags dockspace_flags = 0;
-    bool p_open_ = true;
-    bool* p_open = &p_open_;
-
-    // Variables to configure the Dockspace example.
-    static bool opt_fullscreen = true; // Is the Dockspace full-screen?
-    static bool opt_padding = false; // Is there padding (a blank space) between the window edge and the Dockspace?
-
-    if (ImGui::BeginMenuBar())
-    {
-        if (ImGui::BeginMenu("Options"))
-        {
-            // Disabling fullscreen would allow the window to be moved to the front of other windows,
-            // which we can't undo at the moment without finer window depth/z control.
-            ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
-            ImGui::MenuItem("Padding", NULL, &opt_padding);
-            ImGui::Separator();
-
-            // Display a menu item for each Dockspace flag, clicking on one will toggle its assigned flag.
-            if (ImGui::MenuItem("Flag: NoSplit",                "", (dockspace_flags & ImGuiDockNodeFlags_NoSplit) != 0))                 { dockspace_flags ^= ImGuiDockNodeFlags_NoSplit; }
-            if (ImGui::MenuItem("Flag: NoResize",               "", (dockspace_flags & ImGuiDockNodeFlags_NoResize) != 0))                { dockspace_flags ^= ImGuiDockNodeFlags_NoResize; }
-            if (ImGui::MenuItem("Flag: NoDockingInCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingInCentralNode) != 0))  { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingInCentralNode; }
-            if (ImGui::MenuItem("Flag: AutoHideTabBar",         "", (dockspace_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0))          { dockspace_flags ^= ImGuiDockNodeFlags_AutoHideTabBar; }
-            if (ImGui::MenuItem("Flag: PassthruCentralNode",    "", (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) != 0, opt_fullscreen)) { dockspace_flags ^= ImGuiDockNodeFlags_PassthruCentralNode; }
-            ImGui::Separator();
-
-            // Display a menu item to close this example.
-            if (ImGui::MenuItem("Close", NULL, false, p_open != NULL))
-                if (p_open != NULL) // Remove MSVC warning C6011 (NULL dereference) - the `p_open != NULL` in MenuItem() does prevent NULL derefs, but IntelliSense doesn't analyze that deep so we need to add this in ourselves.
-                    *p_open = false; // Changing this variable to false will close the parent window, therefore closing the Dockspace as well.
-            ImGui::EndMenu();
-        }
-
-       
-        ImGui::EndMenuBar();
-    }
-
-
-}
-
-
 extern "C" void frameImGUI(sg_pass_action* main_pass) {
 	
     const int width = sapp_width();
@@ -308,45 +294,23 @@ extern "C" void frameImGUI(sg_pass_action* main_pass) {
     simgui_new_frame({ width, height, sapp_frame_duration(), sapp_dpi_scale() });
 
     CreateDockingSpace();
-    CreateMenuBar();
+
 
 
     // 1. Show a simple window
     // Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
 
-     ImGui::Begin("DBG, &show_another_window");
+  
+    ImGui::Begin("Debug");
+        ImGui::ColorEdit3("clear color", &main_pass->colors[0].value.r);
 
-    static float f = 0.0f;
-    ImGui::Text("Hello, world!");
-    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-   // ImGui::ColorEdit3("clear color", &pass_action.colors[0].value.r);
-     ImGui::ColorEdit3("clear color", &main_pass->colors[0].value.r);
+        if (ImGui::Button("Test Window")) show_test_window ^= 1;
+        ImGui::Text("w: %d, h: %d, dpi_scale: %.1f", sapp_width(), sapp_height(), sapp_dpi_scale());
 
-
-    if (ImGui::Button("Test Window")) show_test_window ^= 1;
-    if (ImGui::Button("Another Window")) show_another_window ^= 1;
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-    ImGui::Text("w: %d, h: %d, dpi_scale: %.1f", sapp_width(), sapp_height(), sapp_dpi_scale());
-    if (ImGui::Button(sapp_is_fullscreen() ? "Switch to windowed" : "Switch to fullscreen")) {
+        if (ImGui::Button(sapp_is_fullscreen() ? "Switch to windowed" : "Switch to fullscreen")) {
         sapp_toggle_fullscreen();
-    }
-           ImGui::End();
-
-  // 2. Show another simple window, this time using an explicit Begin/End pair
-    if (show_another_window) {
-        ImGui::SetNextWindowSize(ImVec2(200,100), ImGuiCond_FirstUseEver);
-        ImGui::Begin("Another Window", &show_another_window);
-        ImGui::Text("Hello");
-
-        ImGui::End();
-    }
-
-    // 3. Show the ImGui test window. Most of the sample code is in ImGui::ShowDemoWindow()
-    if (show_test_window) {
-        ImGui::SetNextWindowPos(ImVec2(460, 20), ImGuiCond_FirstUseEver);
-        ImGui::ShowDemoWindow();
-    }
-     ImGui::End();
+        }
+    ImGui::End();
 
 
 
@@ -362,6 +326,14 @@ bool popen = true;
  ShowExampleAppConsole(&popen);
 
 
+    ImGui::Begin("Style Editor", &popen);
+    ImGui::ShowStyleEditor();
+    ImGui::End();
+
+
+
+     ImGui::ShowMetricsWindow(&popen); 
+     ImGui::ShowStackToolWindow(&popen); 
 
 
     // the sokol_gfx draw pass
