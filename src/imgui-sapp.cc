@@ -335,27 +335,38 @@ bool popen = true;
 
     ImGui::End();
 
+
+
 /*
- ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-    window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-ImGui::Begin("Zenith Editor", &popen, window_flags);
+ ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar;
+  static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None; // Config flags for the Dockspace
+//dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
+
+ImGui::Begin("NewDockSpace", &popen, window_flags);
         static bool first = true;
         if(first){first = false;
-        static ImGuiDockNodeFlags dockspace_flags = 0; //ImGuiDockNodeFlags_PassthruCentralNode
+      //  static ImGuiDockNodeFlags dockspace_flags = 0; //ImGuiDockNodeFlags_PassthruCentralNode
             ImGuiViewport *viewport = ImGui::GetMainViewport();
-        ImGuiID   dock_id = ImGui::GetID("Style Editor");
+        ImGuiID   dock_id = ImGui::GetID("NewDock");
+        ImGui::DockSpace(dock_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
-         ImGui::DockBuilderRemoveNode(dock_id);
+        // ImGui::DockBuilderRemoveNode(dock_id);
          
-            ImGui::DockBuilderAddNode(dock_id, dockspace_flags | ImGuiDockNodeFlags_DockSpace ) ;
-                    ImGui::DockBuilderSetNodeSize(dock_id, viewport->Size);
+           ImGui::DockBuilderAddNode(dock_id, dockspace_flags | ImGuiDockNodeFlags_DockSpace ) ;
+              //      ImGui::DockBuilderSetNodeSize(dock_id, viewport->Size);
                    // ImGui::DockBuilderDockWindow("Metrics",        dock_id);
-                 ImGui::DockBuilderDockWindow("Debug",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id));
-                    ImGui::DockBuilderFinish(dock_id);
+                 ImGui::DockBuilderDockWindow("Metrics",         ImGui::DockBuilderSplitNode(dock_id, ImGuiDir_Up, 0.25f, nullptr, &dock_id));
+                ImGui::DockBuilderFinish(dock_id);
         }
-
     ImGui::End();
 */
+
+            // Queue docking request
+          //  if (split_data->IsDropAllowed && payload->IsDelivery())
+            //    DockContextQueueDock(ctx, window, split_data->SplitNode, payload_window, split_data->SplitDir, split_data->SplitRatio, split_data == &split_outer);
+      //BeginDockableDragDropTarget
+
+
 
      ImGui::ShowMetricsWindow(&popen); 
      ImGui::ShowStackToolWindow(&popen); 
