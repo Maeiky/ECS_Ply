@@ -16,6 +16,9 @@
 
 static bool show_test_window = true;
 static bool show_another_window = false;
+namespace ImGui {
+    void SetNextWindowDockID(ImGuiID id, ImGuiCond cond);
+}
 
 
 extern  void ShowExampleAppConsole(bool* p_open);
@@ -106,6 +109,9 @@ extern "C" void frame_scene();
 
  // ImGuiID dock_id_right ;
    ImGuiID dockspace_id ;
+      ImGuiID dockspace_right ;
+      ImGuiID dockspace_bot ;
+           ImGuiID dockspace_right_bot ;
 void CreateDockingSpace(){
 
  
@@ -168,12 +174,17 @@ void CreateDockingSpace(){
 	// out_id_at_opposite_dir is in the opposite direction
      
      
+dockspace_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id);
+dockspace_right_bot = ImGui::DockBuilderSplitNode(dockspace_right, ImGuiDir_Down, 0.25f, nullptr, &dockspace_id);
 
 
-            ImGui::DockBuilderDockWindow("Stack",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id));
+            ImGui::DockBuilderDockWindow("Stack",         dockspace_right);
+          //  ImGui::DockBuilderDockWindow("Stack",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id));
 
             ImGui::DockBuilderDockWindow("Style Editor",    ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.2f,  nullptr, &dockspace_id));
-            ImGui::DockBuilderDockWindow("Console",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 0.25f, nullptr, &dockspace_id));
+
+            dockspace_bot = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 0.25f, nullptr, &dockspace_id);
+            ImGui::DockBuilderDockWindow("Console",         dockspace_bot);
             ImGui::DockBuilderDockWindow("###Scene",        dockspace_id);
 
 
@@ -288,6 +299,21 @@ void CreateContextWindow(){
 //https://github.com/ocornut/imgui/issues/4430
 }
 
+/*
+struct ImGuiDockPreviewData
+{
+    ImGuiDockNode   FutureNode;
+    bool            IsDropAllowed;
+    bool            IsCenterAvailable;
+    bool            IsSidesAvailable;           // Hold your breath, grammar freaks..
+    bool            IsSplitDirExplicit;         // Set when hovered the drop rect (vs. implicit SplitDir==None when hovered the window)
+    ImGuiDockNode*  SplitNode;
+    ImGuiDir        SplitDir;
+    float           SplitRatio;
+    ImRect          DropRectsDraw[ImGuiDir_COUNT + 1];  // May be slightly different from hit-testing drop rects used in DockNodeCalcDropRects()
+
+    ImGuiDockPreviewData() : FutureNode(0) { IsDropAllowed = IsCenterAvailable = IsSidesAvailable = IsSplitDirExplicit = false; SplitNode = NULL; SplitDir = ImGuiDir_None; SplitRatio = 0.f; for (int n = 0; n < IM_ARRAYSIZE(DropRectsDraw); n++) DropRectsDraw[n] = ImRect(+FLT_MAX, +FLT_MAX, -FLT_MAX, -FLT_MAX); }
+};*/
 
 
 
@@ -326,27 +352,66 @@ extern "C" void frameImGUI(sg_pass_action* main_pass) {
 
 
 bool popen = true;
- ShowExampleAppConsole(&popen);
+
+ // ImGui::SetNextWindowDockID(dockspace_bot, ImGuiCond_Once);
+     ShowExampleAppConsole(&popen);
 
 
-    ImGui::Begin("Style Editor", &popen);
+
+
+     ImGui::ShowMetricsWindow(&popen); 
+
+     ImGui::ShowStackToolWindow(&popen); 
+
+static bool first_ = true;
+if(first_){first_=false;
+    ImGui::SetNextWindowDockID(dockspace_right_bot, ImGuiCond_Once);
+}
+   ImGui::Begin("Style", &popen);
+   // ImGui::Begin("Style Editor", &popen);
     ImGui::ShowStyleEditor();
-
-
     ImGui::End();
 
 
 
 /*
+static bool first = true;
+if(first){first=false;
+    ImGuiContext* ctx = GImGui;
+    ImGuiContext& g = *ctx;
+    ImGuiWindow* window =  ImGui::FindWindowByName("Style");
+
+    ImGuiDir    SplitDir = ImGuiDir_Up;
+    ImGuiWindow* windowfrom =  ImGui::FindWindowByName("Metrics");
+    ImGuiDockNode*   node = window->DockNode;
+
+   // node->Size = ImVec2(50.0,50.0);
+
+
+//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(250, 250));
+    ImGui::DockContextQueueDock(ctx, window, node, windowfrom, SplitDir, 0.5, true);
+}*/
+
+
+
+
+ // ImGuiWindow* test =  ImGui::FindWindowByName("Style");
+ // ImGui::SetWindowSize(test,  ImVec2(50.0,50.0));
+
+//SetNextWindowDockId
+
+
+
+
  ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar;
   static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None; // Config flags for the Dockspace
 //dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
-
+/*
 ImGui::Begin("NewDockSpace", &popen, window_flags);
         static bool first = true;
         if(first){first = false;
       //  static ImGuiDockNodeFlags dockspace_flags = 0; //ImGuiDockNodeFlags_PassthruCentralNode
-            ImGuiViewport *viewport = ImGui::GetMainViewport();
+          //  ImGuiViewport *viewport = ImGui::GetMainViewport();
         ImGuiID   dock_id = ImGui::GetID("NewDock");
         ImGui::DockSpace(dock_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
@@ -355,21 +420,21 @@ ImGui::Begin("NewDockSpace", &popen, window_flags);
            ImGui::DockBuilderAddNode(dock_id, dockspace_flags | ImGuiDockNodeFlags_DockSpace ) ;
               //      ImGui::DockBuilderSetNodeSize(dock_id, viewport->Size);
                    // ImGui::DockBuilderDockWindow("Metrics",        dock_id);
-                 ImGui::DockBuilderDockWindow("Metrics",         ImGui::DockBuilderSplitNode(dock_id, ImGuiDir_Up, 0.25f, nullptr, &dock_id));
+                 ImGui::DockBuilderDockWindow("Style Editor",         ImGui::DockBuilderSplitNode(dock_id, ImGuiDir_Up, 0.25f, nullptr, &dock_id));
                 ImGui::DockBuilderFinish(dock_id);
         }
     ImGui::End();
 */
 
+
+
+
             // Queue docking request
           //  if (split_data->IsDropAllowed && payload->IsDelivery())
             //    DockContextQueueDock(ctx, window, split_data->SplitNode, payload_window, split_data->SplitDir, split_data->SplitRatio, split_data == &split_outer);
       //BeginDockableDragDropTarget
+// DockContextProcessDock(ctx, &dc->Requests[n]);
 
-
-
-     ImGui::ShowMetricsWindow(&popen); 
-     ImGui::ShowStackToolWindow(&popen); 
 
 
 

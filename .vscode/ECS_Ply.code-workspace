@@ -6,7 +6,9 @@
 	],
 	"settings": {
 		"files.associations": {
-			"sokol_app.h": "c"
+			"sokol_app.h": "c",
+			"chrono": "cpp",
+			"system_error": "cpp"
 		}
 	}
 }
