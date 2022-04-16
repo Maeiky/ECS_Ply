@@ -175,18 +175,23 @@ void CreateDockingSpace(){
      
      
 dockspace_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id);
-dockspace_right_bot = ImGui::DockBuilderSplitNode(dockspace_right, ImGuiDir_Down, 0.25f, nullptr, &dockspace_id);
+dockspace_right_bot = ImGui::DockBuilderSplitNode(dockspace_right, ImGuiDir_Down, 0.25f, nullptr, &dockspace_right);
+ImGuiID dockspace_right_bot_bot = ImGui::DockBuilderSplitNode(dockspace_right_bot, ImGuiDir_Down, 0.25f, nullptr, &dockspace_right_bot);
+
 
 
             ImGui::DockBuilderDockWindow("Stack",         dockspace_right);
           //  ImGui::DockBuilderDockWindow("Stack",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id));
 
-            ImGui::DockBuilderDockWindow("Style Editor",    ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.2f,  nullptr, &dockspace_id));
+            ImGui::DockBuilderDockWindow("Style",    ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.2f,  nullptr, &dockspace_id));
 
             dockspace_bot = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 0.25f, nullptr, &dockspace_id);
             ImGui::DockBuilderDockWindow("Console",         dockspace_bot);
             ImGui::DockBuilderDockWindow("###Scene",        dockspace_id);
 
+
+  ImGui::DockBuilderDockWindow("Metrics",        dockspace_right_bot);
+  ImGui::DockBuilderDockWindow("Debug",        dockspace_right_bot_bot);
 
 
 
@@ -363,9 +368,11 @@ bool popen = true;
 
      ImGui::ShowStackToolWindow(&popen); 
 
+
+
 static bool first_ = true;
 if(first_){first_=false;
-    ImGui::SetNextWindowDockID(dockspace_right_bot, ImGuiCond_Once);
+ //  ImGui::SetNextWindowDockID(dockspace_right_bot, ImGuiCond_Once);
 }
    ImGui::Begin("Style", &popen);
    // ImGui::Begin("Style Editor", &popen);
