@@ -166,11 +166,10 @@ void CreateDockingSpace(){
 	// will be returned by the function)
 	// out_id_at_dir is the id of the node in the direction we specified earlier,
 	// out_id_at_opposite_dir is in the opposite direction
+     
+     
 
 
-            ImGui::DockBuilderDockWindow("Debug",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id));
-
-            ImGui::DockBuilderDockWindow("Metrics",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id));
             ImGui::DockBuilderDockWindow("Stack",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id));
 
             ImGui::DockBuilderDockWindow("Style Editor",    ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.2f,  nullptr, &dockspace_id));
@@ -318,7 +317,6 @@ extern "C" void frameImGUI(sg_pass_action* main_pass) {
     ImGui::End();
 
 
-
 //ImGui::GetStyle().Colors[ImGuiCol_ChildBg]  = ImVec4(0.0f, 0.0f, 0.0f, 0.00f);
 //ImGui::GetStyle().Colors[ImGuiCol_WindowBg]  = ImVec4(0.0f, 0.0f, 1.0f, 0.0f);
 //ImGui::GetStyle().Colors[ImGuiCol_FrameBg]  = ImVec4(0.0f, 0.0f, 0.0f, 0.00f);
@@ -333,12 +331,35 @@ bool popen = true;
 
     ImGui::Begin("Style Editor", &popen);
     ImGui::ShowStyleEditor();
+
+
     ImGui::End();
 
+/*
+ ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+    window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+ImGui::Begin("Zenith Editor", &popen, window_flags);
+        static bool first = true;
+        if(first){first = false;
+        static ImGuiDockNodeFlags dockspace_flags = 0; //ImGuiDockNodeFlags_PassthruCentralNode
+            ImGuiViewport *viewport = ImGui::GetMainViewport();
+        ImGuiID   dock_id = ImGui::GetID("Style Editor");
 
+         ImGui::DockBuilderRemoveNode(dock_id);
+         
+            ImGui::DockBuilderAddNode(dock_id, dockspace_flags | ImGuiDockNodeFlags_DockSpace ) ;
+                    ImGui::DockBuilderSetNodeSize(dock_id, viewport->Size);
+                   // ImGui::DockBuilderDockWindow("Metrics",        dock_id);
+                 ImGui::DockBuilderDockWindow("Debug",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id));
+                    ImGui::DockBuilderFinish(dock_id);
+        }
+
+    ImGui::End();
+*/
 
      ImGui::ShowMetricsWindow(&popen); 
      ImGui::ShowStackToolWindow(&popen); 
+
 
 
     // the sokol_gfx draw pass
