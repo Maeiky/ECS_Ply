@@ -109,9 +109,9 @@ extern "C" void frame_scene();
 
  // ImGuiID dock_id_right ;
    ImGuiID dockspace_id ;
-      ImGuiID dockspace_right ;
-      ImGuiID dockspace_bot ;
-           ImGuiID dockspace_right_bot ;
+   ///   ImGuiID dockspace_right ;
+    ///  ImGuiID dockspace_bot ;
+         //  ImGuiID dockspace_right_bot ;
 void CreateDockingSpace(){
 
  
@@ -174,23 +174,23 @@ void CreateDockingSpace(){
 	// out_id_at_opposite_dir is in the opposite direction
      
      
-dockspace_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id);
-dockspace_right_bot = ImGui::DockBuilderSplitNode(dockspace_right, ImGuiDir_Down, 0.25f, nullptr, &dockspace_right);
-ImGuiID dockspace_right_bot_bot = ImGui::DockBuilderSplitNode(dockspace_right_bot, ImGuiDir_Down, 0.25f, nullptr, &dockspace_right_bot);
+ImGuiID dockspace_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.35f, nullptr, &dockspace_id);
+ImGuiID dockspace_right_bot = ImGui::DockBuilderSplitNode(dockspace_right, ImGuiDir_Up, 0.35f, nullptr, &dockspace_right);
+ImGuiID dockspace_right_bot_bot = ImGui::DockBuilderSplitNode(dockspace_right_bot, ImGuiDir_Up, 0.40f, nullptr, &dockspace_right_bot);
 
 
 
-            ImGui::DockBuilderDockWindow("Stack",         dockspace_right);
+            ImGui::DockBuilderDockWindow("Metrics",         dockspace_right);
           //  ImGui::DockBuilderDockWindow("Stack",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id));
 
-            ImGui::DockBuilderDockWindow("Style",    ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.2f,  nullptr, &dockspace_id));
+            ImGui::DockBuilderDockWindow("Style",    ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.5f,  nullptr, &dockspace_id));
 
-            dockspace_bot = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 0.25f, nullptr, &dockspace_id);
+            ImGuiID dockspace_bot = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 0.5f, nullptr, &dockspace_id);
             ImGui::DockBuilderDockWindow("Console",         dockspace_bot);
             ImGui::DockBuilderDockWindow("###Scene",        dockspace_id);
 
 
-  ImGui::DockBuilderDockWindow("Metrics",        dockspace_right_bot);
+  ImGui::DockBuilderDockWindow("Stack",        dockspace_right_bot);
   ImGui::DockBuilderDockWindow("Debug",        dockspace_right_bot_bot);
 
 
