@@ -43,9 +43,10 @@ shdc --input {pSrc}/{sShader}.glsl --output {sShader}.glsl.h --slang glsl330:gls
 -I {pExtLib}Freetype/
 -{vIncl}
 >
+-#Copy {pRc} {pOut}Rc/
+>
 ;Link
 -o {pObj} -#To {pOut}{sName}.* -{vLink} 
 -{vOS_FlagLink}
->
--#Copy {pRc} {pOut}Rc/
+-{vPreloadRc}
 >
