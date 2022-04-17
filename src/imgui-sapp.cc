@@ -159,7 +159,8 @@ void CreateDockingSpace(){
 
             ImGui::DockBuilderRemoveNode(dockspace_id); // clear any previous layout
             ImGui::DockBuilderAddNode(dockspace_id, dockspace_flags | ImGuiDockNodeFlags_DockSpace ) ;
-            ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->Size);
+          // ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->Size);
+            ImGui::DockBuilderSetNodeSize(dockspace_id, ImVec2(800,600)); //Important set fixed size
 
            //  dock_id_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id);
             //ImGuiID dock_id_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id);
@@ -183,7 +184,7 @@ ImGuiID dockspace_right_bot_bot = ImGui::DockBuilderSplitNode(dockspace_right_bo
             ImGui::DockBuilderDockWindow("Metrics",         dockspace_right);
           //  ImGui::DockBuilderDockWindow("Stack",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id));
 
-            ImGui::DockBuilderDockWindow("Style",    ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.5f,  nullptr, &dockspace_id));
+            ImGui::DockBuilderDockWindow("Style",    ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.65f,  nullptr, &dockspace_id));
 
             ImGuiID dockspace_bot = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 0.5f, nullptr, &dockspace_id);
             ImGui::DockBuilderDockWindow("Console",         dockspace_bot);
