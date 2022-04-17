@@ -39,6 +39,72 @@ typedef struct {
 
 static void fetch_callback(const sfetch_response_t*);
 
+
+
+
+static void load_pmg(char* path, size_t size) {
+
+     int png_width, png_height, num_channels;
+        const int desired_channels = 4;
+        stbi_uc* pixels = stbi_load_from_memory(
+            (const stbi_uc*)path,
+            size,
+            &png_width, &png_height,
+            &num_channels, desired_channels);
+        if (pixels) {
+            /* ok, time to actually initialize the sokol-gfx texture */
+            sg_init_image(state.bind.fs_images[SLOT_tex], &(sg_image_desc){
+                .width = png_width,
+                .height = png_height,
+                .pixel_format = SG_PIXELFORMAT_RGBA8,
+                .min_filter = SG_FILTER_LINEAR,
+                .mag_filter = SG_FILTER_LINEAR,
+                .data.subimage[0][0] = {
+                    .ptr = pixels,
+                    .size = (size_t)(png_width * png_height * 4),
+                }
+            });
+            stbi_image_free(pixels);
+        }
+}
+
+
+char* LoadFile(char* path, size_t* size) {
+
+    size_t _nSize  = 0;
+
+          FILE*  file = fopen( (char*)path, "rb");
+        // file = fopen( "Rc/Tf.png", "rb");
+            if (file != NULL){
+          //  size_t size;
+ 
+                fseek (file, 0, SEEK_END);
+                _nSize=ftell(file);
+                fseek(file, 0, SEEK_SET);
+                
+                char* _aData = (char*)malloc(_nSize * sizeof(char)); //TODO may be 0 sized
+                fread(_aData, 1, _nSize, file);
+              //  _oRc->fSetDynamicMemData(_aData, _nSize); //Will be auto free
+
+                *size=_nSize;
+
+                fclose(file);
+
+                      printf("\nFile loaded\n");
+                return _aData;
+            }else{
+                printf("\nError\n");
+                //Debug.fError("Error, can't open file : " + sFullPath);
+               return 0;
+       
+            
+        }
+            fclose(file);	
+                  printf("\nError\n");
+            return 0;
+    }
+
+
 void iniImGUI(void);
 
 static void init(void) {
@@ -153,17 +219,34 @@ static void init(void) {
         - NOTE that we're not using the user_data member, since all required
           state is in a global variable anyway
     */
+
+
+/*
+size_t file_size = 0;
+char* file = LoadFile("Rc/Ply.png", &file_size);
+load_pmg(file, file_size);
+*/
+
     char path_buf[512];
     sfetch_send(&(sfetch_request_t){
-        .path = fileutil_get_path("RC/Ply.png", path_buf, sizeof(path_buf)),
+        .path = fileutil_get_path("Rc/Ply.png", path_buf, sizeof(path_buf)),
         .callback = fetch_callback,
         .buffer_ptr = state.file_buffer,
         .buffer_size = sizeof(state.file_buffer)
     });
     printf("%s\n", path_buf);
 	
+
+
+
 	iniImGUI();
 }
+
+
+
+
+
+    
 
 /* The fetch-callback is called by sokol_fetch.h when the data is loaded,
    or when an error has occurred.
@@ -173,28 +256,7 @@ static void fetch_callback(const sfetch_response_t* response) {
         /* the file data has been fetched, since we provided a big-enough
            buffer we can be sure that all data has been loaded here
         */
-        int png_width, png_height, num_channels;
-        const int desired_channels = 4;
-        stbi_uc* pixels = stbi_load_from_memory(
-            response->buffer_ptr,
-            (int)response->fetched_size,
-            &png_width, &png_height,
-            &num_channels, desired_channels);
-        if (pixels) {
-            /* ok, time to actually initialize the sokol-gfx texture */
-            sg_init_image(state.bind.fs_images[SLOT_tex], &(sg_image_desc){
-                .width = png_width,
-                .height = png_height,
-                .pixel_format = SG_PIXELFORMAT_RGBA8,
-                .min_filter = SG_FILTER_LINEAR,
-                .mag_filter = SG_FILTER_LINEAR,
-                .data.subimage[0][0] = {
-                    .ptr = pixels,
-                    .size = (size_t)(png_width * png_height * 4),
-                }
-            });
-            stbi_image_free(pixels);
-        }
+        load_pmg(response->buffer_ptr, response->fetched_size);
     }
     else if (response->failed) {
         // if loading the file failed, set clear color to red
