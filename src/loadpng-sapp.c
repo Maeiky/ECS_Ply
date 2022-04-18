@@ -242,6 +242,7 @@ load_png(file, file_size);
 
 
 	iniImGUI();
+    rive_ini();
 }
 
 
@@ -317,7 +318,7 @@ static void frame(void) {
 	
     frame_scene();
 	frameImGUI(&state.pass_action);
-	
+    rive_frame(&state.pass_action);
 
     sg_commit();
 	endframeImGUI();

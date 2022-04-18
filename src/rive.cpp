@@ -413,7 +413,7 @@ static void AppDropCallback(GLFWwindow* window, int count, const char** paths)
 }*/
 
 void add_assets(void);
-void rive_init(void) {
+extern "C" void rive_ini(void) {
     // setup sokol-gfx, sokol-time and sokol-imgui
     sg_desc desc = { };
     desc.context = sapp_sgcontext();
