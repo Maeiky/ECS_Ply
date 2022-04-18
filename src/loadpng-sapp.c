@@ -339,7 +339,7 @@ sapp_desc sokol_main(int argc, char* argv[]) {
         .frame_cb = frame,
         .cleanup_cb = cleanup,
         .width = 1680,
-        .height = 1082,
+        .height = 1080,
 		.event_cb = input,
         .sample_count = 4,
 		.swap_interval = 1,
