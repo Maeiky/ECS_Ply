@@ -11,6 +11,7 @@
 -{vExIncl}=
 -I {pExtLib}imgui/
 -I {pExtLib}rive/
+;-DSOKOL_VALIDATE_NON_FATAL
 >
 -{sFolder}={_sPlatform}_{_sOpt}_{sToolChainType}
 >

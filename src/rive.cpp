@@ -415,11 +415,12 @@ static void AppDropCallback(GLFWwindow* window, int count, const char** paths)
 void add_assets(void);
 extern "C" void rive_ini(void) {
     // setup sokol-gfx, sokol-time and sokol-imgui
+    /*
     sg_desc desc = { };
     desc.context = sapp_sgcontext();
 	desc.buffer_pool_size = 4096;
     sg_setup(&desc);
-
+    */
     memset((void*)&g_app, 0, sizeof(g_app));
 	
     g_app.m_Camera.Reset();
