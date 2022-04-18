@@ -1401,7 +1401,7 @@ void rive_cleanup()
 }
 
 
-static void rive_frame(void) {
+extern "C" void rive_frame(sg_pass_action* main_pass) {
 
     static int windowWidth          = sapp_width();
     static int windowHeight         = sapp_height();

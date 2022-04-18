@@ -107,6 +107,7 @@ char* LoadFile(char* path, size_t* size) {
 
 
 void iniImGUI(void);
+void rive_ini(void);
 
 static void init(void) {
     /* setup sokol-gfx and the optional debug-ui*/
@@ -269,6 +270,7 @@ static void fetch_callback(const sfetch_response_t* response) {
 
 
 void frameImGUI(sg_pass_action* main_pass);
+void rive_frame(sg_pass_action* main_pass);
 void endframeImGUI(void);
 
 /* The frame-function is fairly boring, note that no special handling is
