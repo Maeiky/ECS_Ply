@@ -10,7 +10,7 @@
 >
 -{vExIncl}=
 -I {pExtLib}imgui/
--I {pExtLib}rive/include/
+-I {pExtLib}rive/
 >
 -{sFolder}={_sPlatform}_{_sOpt}_{sToolChainType}
 >

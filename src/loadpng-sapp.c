@@ -18,6 +18,7 @@
 #include "sokol_app.h"
 #include "sokol_fetch.h"
 #include "sokol_glue.h"
+#include "sokol_time.h"
 #include "stb/stb_image.h"
 #include "dbgui/dbgui.h"
 #include "util/fileutil.h"
@@ -42,7 +43,7 @@ static void fetch_callback(const sfetch_response_t*);
 
 
 
-static void load_pmg(char* path, size_t size) {
+static void load_png(char* path, size_t size) {
 
      int png_width, png_height, num_channels;
         const int desired_channels = 4;
@@ -224,7 +225,7 @@ static void init(void) {
 /*
 size_t file_size = 0;
 char* file = LoadFile("Rc/Ply.png", &file_size);
-load_pmg(file, file_size);
+load_png(file, file_size);
 */
 
     char path_buf[512];
@@ -256,7 +257,7 @@ static void fetch_callback(const sfetch_response_t* response) {
         /* the file data has been fetched, since we provided a big-enough
            buffer we can be sure that all data has been loaded here
         */
-        load_pmg(response->buffer_ptr, response->fetched_size);
+        load_png(response->buffer_ptr, response->fetched_size);
     }
     else if (response->failed) {
         // if loading the file failed, set clear color to red

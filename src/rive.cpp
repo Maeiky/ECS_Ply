@@ -1,9 +1,5 @@
 #include <stdio.h>
 
-#define SOKOL_IMPL
-#define SOKOL_GLCORE33
-#define SOKOL_IMGUI_IMPL
-
 #include "sokol_app.h"
 #include "sokol_gfx.h"
 #include "sokol_glue.h"
@@ -19,7 +15,7 @@
 #include <rive/file.hpp>
 
 #include "rive/rive_render_api.h"
-#include "shaders.glsl.h"
+#include "rive.glsl.h"
 
 #define VIEWER_WINDOW_NAME "Rive Sokol Viewer"
 
@@ -86,8 +82,7 @@ static struct App
     rive::HContext             m_Ctx;
     ArtboardContext            m_ArtboardContexts[MAX_ARTBOARD_CONTEXTS];
     rive::HRenderer            m_Renderer;
-    // GLFW
-   // GLFWwindow*                m_Window;
+
     // Sokol
     sg_shader                  m_MainShader;
     sg_pipeline                m_TessellationIsClippingPipelines[256];
@@ -418,72 +413,22 @@ static void AppDropCallback(GLFWwindow* window, int count, const char** paths)
 }*/
 
 void add_assets(void);
-void init(void) {
+void rive_init(void) {
     // setup sokol-gfx, sokol-time and sokol-imgui
     sg_desc desc = { };
     desc.context = sapp_sgcontext();
 	desc.buffer_pool_size = 4096;
     sg_setup(&desc);
-/*
-    // use sokol-imgui with all default-options (we're not doing
-    // multi-sampled rendering or using non-default pixel formats)
-    simgui_desc_t simgui_desc = { };
-    simgui_setup(&simgui_desc);
-
-    // initial clear color
-    pass_action.colors[0].action = SG_ACTION_CLEAR;
-    pass_action.colors[0].value = { 0.0f, 0.5f, 0.7f, 1.0f };*/
-
-
-/*
-    ////////////////////////////////////////////////////
-    // GLFW setup
-    ////////////////////////////////////////////////////
-    if (!glfwInit())
-    {
-        fprintf(stderr, "Failed to initialize glfw.\n");
-        return false;
-    }
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    GLFWwindow* window = glfwCreateWindow(1280, 720, VIEWER_WINDOW_NAME, 0, 0);
-
-    if (!window)
-    {
-        fprintf(stderr, "Failed to initialize glfw.\n");
-        return false;
-    }
-
-
-    glfwSetCursorPosCallback(window, AppCursorCallback);
-    glfwSetMouseButtonCallback(window, AppMouseButtonCallback);
-    glfwSetScrollCallback(window, AppMouseWheelCallback);
-    glfwSetDropCallback(window, AppDropCallback);
-
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
-	*/
-	
 
     memset((void*)&g_app, 0, sizeof(g_app));
 	
-	
-   // g_app.m_Window = window;
     g_app.m_Camera.Reset();
 
     ////////////////////////////////////////////////////
     // Sokol setup
     ////////////////////////////////////////////////////
-	
     stm_setup();
-	/*
-    sg_desc sg_setup_desc = {
-        .buffer_pool_size = 4096
-    };
-    sg_setup(&sg_setup_desc);
-*/
+
     // Main tessellation pipeline
     sg_pipeline_desc tessellationPipeline               = {};
     tessellationPipeline.shader                         = sg_make_shader(rive_shader_shader_desc(sg_query_backend()));
@@ -1446,7 +1391,7 @@ void AppConfigure(rive::RenderMode renderMode, float contourQuality, float* back
     rive::setContourQuality(g_app.m_Renderer, contourQuality);
 }
 
-void cleanup()
+void rive_cleanup()
 {
     rive::destroyRenderer(g_app.m_Renderer);
     rive::destroyContext(g_app.m_Ctx);
@@ -1456,7 +1401,7 @@ void cleanup()
 }
 
 
-static void frame(void) {
+static void rive_frame(void) {
 
     static int windowWidth          = sapp_width();
     static int windowHeight         = sapp_height();
@@ -1473,118 +1418,114 @@ static void frame(void) {
     static uint64_t timeRenderRive;
 	
 
-        dt             = (float) stm_sec(stm_laptime(&timeFrame));
-        ImGuiIO& io    = ImGui::GetIO();
-        io.DisplaySize = ImVec2(float(windowWidth), float(windowHeight));
-        io.DeltaTime   = dt;
+	dt             = (float) stm_sec(stm_laptime(&timeFrame));
+	ImGuiIO& io    = ImGui::GetIO();
+	io.DisplaySize = ImVec2(float(windowWidth), float(windowHeight));
+	io.DeltaTime   = dt;
 
-        ImGui::NewFrame();
-        ImGui::SetNextWindowPos(ImVec2(0,0));
-        ImGui::Begin("Viewer Configuration");
-        ImGui::ColorEdit3("Background Color", backgroundColor);
-        ImGui::SliderFloat("Path Quality", &contourQuality, 0.0f, 1.0f);
-        ImGui::Checkbox("Clipping", &clippingSupported);
+	ImGui::NewFrame();
+	ImGui::SetNextWindowPos(ImVec2(0,0));
+	ImGui::Begin("Viewer Configuration");
+	ImGui::ColorEdit3("Background Color", backgroundColor);
+	ImGui::SliderFloat("Path Quality", &contourQuality, 0.0f, 1.0f);
+	ImGui::Checkbox("Clipping", &clippingSupported);
 
-        ImGui::Text("Render Mode");
-        ImGui::RadioButton("Tessellation", &renderModeChoice, (int) rive::MODE_TESSELLATION);
-        ImGui::RadioButton("Stencil To Cover", &renderModeChoice, (int) rive::MODE_STENCIL_TO_COVER);
+	ImGui::Text("Render Mode");
+	ImGui::RadioButton("Tessellation", &renderModeChoice, (int) rive::MODE_TESSELLATION);
+	ImGui::RadioButton("Stencil To Cover", &renderModeChoice, (int) rive::MODE_STENCIL_TO_COVER);
 
-        ImGui::Spacing();
-        ImGui::Separator();
-        ImGui::Spacing();
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
 
-        ImGui::Text("Debug View");
-        ImGui::RadioButton("None", (int*)&g_app.m_DebugView, (int) App::DEBUG_VIEW_NONE);
-        ImGui::RadioButton("Contour", (int*)&g_app.m_DebugView, (int) App::DEBUG_VIEW_CONTOUR);
+	ImGui::Text("Debug View");
+	ImGui::RadioButton("None", (int*)&g_app.m_DebugView, (int) App::DEBUG_VIEW_NONE);
+	ImGui::RadioButton("Contour", (int*)&g_app.m_DebugView, (int) App::DEBUG_VIEW_CONTOUR);
 
-        if (g_app.m_DebugView == App::DEBUG_VIEW_CONTOUR)
-        {
-            ImGui::ColorEdit4("Solid Color", g_app.m_DebugViewData.m_ContourSolidColor);
-        }
+	if (g_app.m_DebugView == App::DEBUG_VIEW_CONTOUR)
+	{
+		ImGui::ColorEdit4("Solid Color", g_app.m_DebugViewData.m_ContourSolidColor);
+	}
 
-        ImGui::Spacing();
-        ImGui::Separator();
-        ImGui::Spacing();
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
 
-        bool artboardLoaded = false;
-        for (int i = 0; i < App::MAX_ARTBOARD_CONTEXTS; ++i)
-        {
-            App::ArtboardContext& ctx = g_app.m_ArtboardContexts[i];
+	bool artboardLoaded = false;
+	for (int i = 0; i < App::MAX_ARTBOARD_CONTEXTS; ++i)
+	{
+		App::ArtboardContext& ctx = g_app.m_ArtboardContexts[i];
 
-            if (ctx.m_Artboards.Size() == 0)
-            {
-                continue;
-            }
+		if (ctx.m_Artboards.Size() == 0)
+		{
+			continue;
+		}
 
-            char cloneCountLabel[64];
-            snprintf(cloneCountLabel, sizeof(cloneCountLabel), "%d: Clone Count", i);
+		char cloneCountLabel[64];
+		snprintf(cloneCountLabel, sizeof(cloneCountLabel), "%d: Clone Count", i);
 
-            ImGui::Text("Artboard %d: '%s'", i, ctx.m_Artboards[0].m_Artboard->name().c_str());
-            if (ImGui::Button("x"))
-            {
-                RemoveArtboardContext(i);
-            }
-            ImGui::SameLine();
-            ImGui::SliderInt(cloneCountLabel, &ctx.m_CloneCount, 1, 10);
-            UpdateArtboardCloneCount(ctx);
+		ImGui::Text("Artboard %d: '%s'", i, ctx.m_Artboards[0].m_Artboard->name().c_str());
+		if (ImGui::Button("x"))
+		{
+			RemoveArtboardContext(i);
+		}
+		ImGui::SameLine();
+		ImGui::SliderInt(cloneCountLabel, &ctx.m_CloneCount, 1, 10);
+		UpdateArtboardCloneCount(ctx);
 
-            artboardLoaded = true;
-        }
+		artboardLoaded = true;
+	}
 
-        if (!artboardLoaded)
-        {
-            ImGui::Text("Drag and drop .riv file(s) to preview them.");
-        }
+	if (!artboardLoaded)
+	{
+		ImGui::Text("Drag and drop .riv file(s) to preview them.");
+	}
 
-        ImGui::Spacing();
-        ImGui::Separator();
-        ImGui::Spacing();
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
 
-        ImGui::Text("App  Frame  Time: %.3f ms", 1000.0f / ImGui::GetIO().Framerate);
-        ImGui::Text("Rive Update Time: %.3f ms", (float) stm_ms(timeUpdateRive));
-        ImGui::Text("Rive Render Time: %.3f ms", (float) stm_ms(timeRenderRive));
-        ImGui::End();
+	ImGui::Text("App  Frame  Time: %.3f ms", 1000.0f / ImGui::GetIO().Framerate);
+	ImGui::Text("Rive Update Time: %.3f ms", (float) stm_ms(timeUpdateRive));
+	ImGui::Text("Rive Render Time: %.3f ms", (float) stm_ms(timeRenderRive));
+	ImGui::End();
 
-        if (!io.WantCaptureMouse)
-        {
-            if (io.MouseDown[0])
-            {
-                g_app.m_Camera.m_X    += io.MousePos.x - mouseLastX;
-                g_app.m_Camera.m_Y    += io.MousePos.y - mouseLastY;
-            }
+	if (!io.WantCaptureMouse)
+	{
+		if (io.MouseDown[0])
+		{
+			g_app.m_Camera.m_X    += io.MousePos.x - mouseLastX;
+			g_app.m_Camera.m_Y    += io.MousePos.y - mouseLastY;
+		}
 
-            g_app.m_Camera.m_Zoom += io.MouseWheel;
-        }
+		g_app.m_Camera.m_Zoom += io.MouseWheel;
+	}
 
-        mouseLastX = io.MousePos.x;
-        mouseLastY = io.MousePos.y;
+	mouseLastX = io.MousePos.x;
+	mouseLastY = io.MousePos.y;
 
-        AppConfigure((rive::RenderMode) renderModeChoice, contourQuality, backgroundColor, clippingSupported);
+	AppConfigure((rive::RenderMode) renderModeChoice, contourQuality, backgroundColor, clippingSupported);
 
-        timeUpdateRive = stm_now();
-        AppUpdateRive(dt, windowWidth, windowHeight);
-        timeUpdateRive = stm_since(timeUpdateRive);
+	timeUpdateRive = stm_now();
+	AppUpdateRive(dt, windowWidth, windowHeight);
+	timeUpdateRive = stm_since(timeUpdateRive);
 
-        sg_begin_default_pass(&g_app.m_PassAction, windowWidth, windowHeight);
+	sg_begin_default_pass(&g_app.m_PassAction, windowWidth, windowHeight);
 
-        timeRenderRive = stm_now();
-        AppRenderRive(windowWidth, windowHeight);
-        timeRenderRive = stm_since(timeRenderRive);
+	timeRenderRive = stm_now();
+	AppRenderRive(windowWidth, windowHeight);
+	timeRenderRive = stm_since(timeRenderRive);
 
-        ImGui::Render();
-        AppDrawImgui(ImGui::GetDrawData());
+	ImGui::Render();
+	AppDrawImgui(ImGui::GetDrawData());
 
-        sg_end_pass();
-        sg_commit();
-
-  //      glfwSwapBuffers(g_app.m_Window);glfwPollEvents();
-    //}
-	
+	sg_end_pass();
+	//sg_commit();
 }
 
 
 
-
+/*
 sapp_desc sokol_main(int argc, char* argv[]) {
     (void)argc; (void)argv;
     sapp_desc desc = { };
@@ -1598,8 +1539,7 @@ sapp_desc sokol_main(int argc, char* argv[]) {
     desc.icon.sokol_default = true;
     return desc;
 }
-
-
+*/
 void add_assets(void){
 	///// Add some assets
 	AddArtboardFromPath("Rc/runner.riv");
