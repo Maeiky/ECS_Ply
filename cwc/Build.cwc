@@ -10,6 +10,7 @@
 >
 -{vExIncl}=
 -I {pExtLib}imgui/
+-I {pExtLib}rive/include/
 >
 -{sFolder}={_sPlatform}_{_sOpt}_{sToolChainType}
 >
@@ -49,4 +50,5 @@ shdc --input {pSrc}/{sShader}.glsl --output {sShader}.glsl.h --slang glsl330:gls
 -o {pObj} -#To {pOut}{sName}.* -{vLink} 
 -{vOS_FlagLink}
 -{vPreloadRc}
+-L {pExtLib}rive/ -lrive
 >

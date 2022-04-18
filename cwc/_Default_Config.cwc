@@ -1,9 +1,9 @@
 ;Default values (Can be predefined)
 ;Uncomment to select
 >
-;-{sToolChainType}:=Default
+-{sToolChainType}:=Default
 ;-{sToolChainType}:=wasm
--{sToolChainType}:=x64
+;-{sToolChainType}:=x64
 >
 -{sOpt}:=Debug
 ;-{sOpt}:=O2
