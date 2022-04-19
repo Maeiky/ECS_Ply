@@ -295,6 +295,9 @@ void CreateContextWindow(){
     }
     */
 
+
+	rive_moveCamera(ImGui::GetIO());
+	
     //draw FBO
    // ImGui::Image((void *)m_frameBufferTextureID, availableSize, ImVec2(0, 1),ImVec2(1, 0));
     ImGui::End();
@@ -328,7 +331,7 @@ extern "C" void frameImGUI(sg_pass_action* main_pass) {
     const int height = sapp_height();
     simgui_new_frame({ width, height, sapp_frame_duration(), sapp_dpi_scale() });
 
-rive_moveCamera(ImGui::GetIO());
+
 
     CreateDockingSpace();
 
@@ -347,6 +350,8 @@ rive_moveCamera(ImGui::GetIO());
         if (ImGui::Button(sapp_is_fullscreen() ? "Switch to windowed" : "Switch to fullscreen")) {
         sapp_toggle_fullscreen();
         }
+		
+	
     ImGui::End();
 
 
@@ -449,7 +454,10 @@ ImGui::Begin("NewDockSpace", &popen, window_flags);
 
     // the sokol_gfx draw pass
     sg_begin_default_pass(&pass_action, width, height);
-    simgui_render();
+
+//simgui_render();
+  
+  
     sg_end_pass();
    // sg_commit();
 }

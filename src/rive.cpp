@@ -21,7 +21,7 @@
 //#define HasImGUI
 #endif
 
-#define HasImGUI_IO
+//#define HasImGUI_IO
 
 
 #define VIEWER_WINDOW_NAME "Rive Sokol Viewer"
@@ -1421,23 +1421,23 @@ void rive_cleanup()
 
 
 extern "C" void rive_moveCamera(ImGuiIO& io){
-/*
+
+	io.DisplaySize = ImVec2(float(sapp_width()), float(sapp_height()));
+	
     static float mouseLastX         = 0.0f;
     static float mouseLastY         = 0.0f;
-	if (!io.WantCaptureMouse){
+	if (io.WantCaptureMouse){
+		if (io.MouseDown[0])
 		{
-			if (io.MouseDown[0])
-			{
-				g_app.m_Camera.m_X    += io.MousePos.x - mouseLastX;
-				g_app.m_Camera.m_Y    += io.MousePos.y - mouseLastY;
-			}
-
-			g_app.m_Camera.m_Zoom += io.MouseWheel;
+			g_app.m_Camera.m_X    += (io.MousePos.x - mouseLastX)*2.0;
+			g_app.m_Camera.m_Y    += (io.MousePos.y - mouseLastY)*2.0;
 		}
-		
-		mouseLastX = io.MousePos.x;
-		mouseLastY = io.MousePos.y;
-	}*/
+
+		g_app.m_Camera.m_Zoom += io.MouseWheel;
+	}
+
+	mouseLastX = io.MousePos.x;
+	mouseLastY = io.MousePos.y;
 }
 
 
@@ -1461,7 +1461,7 @@ extern "C" void rive_frame(sg_pass_action* main_pass) {
 	dt             = (float) stm_sec(stm_laptime(&timeFrame));
 #ifdef HasImGUI_IO
 	ImGuiIO& io    = ImGui::GetIO();
-	io.DisplaySize = ImVec2(float(windowWidth), float(windowHeight));
+	//io.DisplaySize = ImVec2(float(windowWidth), float(windowHeight));
 	io.DeltaTime   = dt;
 #endif
 
@@ -1537,20 +1537,19 @@ extern "C" void rive_frame(sg_pass_action* main_pass) {
 	
 #endif
 #ifdef HasImGUI_IO
-
-	if (!io.WantCaptureMouse)
-	{
+/*
+	if (!io.WantCaptureMouse){
 		if (io.MouseDown[0])
 		{
 			g_app.m_Camera.m_X    += io.MousePos.x - mouseLastX;
 			g_app.m_Camera.m_Y    += io.MousePos.y - mouseLastY;
 		}
 
-		g_app.m_Camera.m_Zoom += io.MouseWheel;
+		g_app.m_Camera.m_Zoom += io.MouseWheel*1000.0;
 	}
 
 	mouseLastX = io.MousePos.x;
-	mouseLastY = io.MousePos.y;
+	mouseLastY = io.MousePos.y;*/
 #endif
 
 	AppConfigure((rive::RenderMode) renderModeChoice, contourQuality, backgroundColor, clippingSupported);
