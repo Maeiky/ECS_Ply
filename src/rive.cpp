@@ -17,6 +17,11 @@
 #include "rive/rive_render_api.h"
 #include "rive.glsl.h"
 
+#ifdef SOKOL_GLCORE33
+#define HasImGUI
+#endif
+
+
 #define VIEWER_WINDOW_NAME "Rive Sokol Viewer"
 
 typedef ImVec2 vs_imgui_params_t;
@@ -602,7 +607,7 @@ extern "C" void rive_ini(void) {
 
 	add_assets();
 
-
+#ifdef HasImGUI
     ////////////////////////////////////////////////////
     // Imgui setup
     ////////////////////////////////////////////////////
@@ -638,7 +643,11 @@ extern "C" void rive_ini(void) {
     ub.uniforms[0].name              = "disp_size";
     ub.uniforms[0].type              = SG_UNIFORMTYPE_FLOAT2;
     imguiShaderDesc.vs.source =
-        "#version 330\n"
+#ifdef SOKOL_GLCORE33
+ "#version 330\n" 
+#else
+"#version 300 es\n" 
+#endif
         "uniform vec2 disp_size;\n"
         "layout(location=0) in vec2 position;\n"
         "layout(location=1) in vec2 texcoord0;\n"
@@ -653,7 +662,12 @@ extern "C" void rive_ini(void) {
     imguiShaderDesc.fs.images[0].name       = "tex";
     imguiShaderDesc.fs.images[0].image_type = SG_IMAGETYPE_2D;
     imguiShaderDesc.fs.source =
-        "#version 330\n"
+#ifdef SOKOL_GLCORE33
+ "#version 330\n" 
+#else
+"#version 300 es\n" 
+#endif
+		"precision mediump float;"
         "uniform sampler2D tex;\n"
         "in vec2 uv;\n"
         "in vec4 color;\n"
@@ -679,7 +693,7 @@ extern "C" void rive_ini(void) {
     imguiPipelineDesc.colors[0].blend.dst_factor_rgb = SG_BLENDFACTOR_ONE_MINUS_SRC_ALPHA;
     imguiPipelineDesc.colors[0].write_mask           = SG_COLORMASK_RGB;
     g_app.m_ImguiPipeline                            = sg_make_pipeline(&imguiPipelineDesc);
-  
+ #endif
 }
 
 void AppUpdateRive(float dt, uint32_t width, uint32_t height)
@@ -761,8 +775,10 @@ static void AppDrawImgui(ImDrawData* drawData)
     // render the command list
     sg_apply_pipeline(g_app.m_ImguiPipeline);
     vs_imgui_params_t vs_params;
+	#ifdef HasImGUI
     vs_params.x = ImGui::GetIO().DisplaySize.x;
     vs_params.y = ImGui::GetIO().DisplaySize.y;
+	#endif
     sg_apply_uniforms(SG_SHADERSTAGE_VS, 0, SG_RANGE(vs_params));
     for (int cl_index = 0; cl_index < drawData->CmdListsCount; cl_index++)
     {
@@ -1420,6 +1436,7 @@ extern "C" void rive_frame(sg_pass_action* main_pass) {
 	
 
 	dt             = (float) stm_sec(stm_laptime(&timeFrame));
+#ifdef HasImGUI
 	ImGuiIO& io    = ImGui::GetIO();
 	io.DisplaySize = ImVec2(float(windowWidth), float(windowHeight));
 	io.DeltaTime   = dt;
@@ -1451,7 +1468,7 @@ extern "C" void rive_frame(sg_pass_action* main_pass) {
 	ImGui::Spacing();
 	ImGui::Separator();
 	ImGui::Spacing();
-
+#endif
 	bool artboardLoaded = false;
 	for (int i = 0; i < App::MAX_ARTBOARD_CONTEXTS; ++i)
 	{
@@ -1464,7 +1481,7 @@ extern "C" void rive_frame(sg_pass_action* main_pass) {
 
 		char cloneCountLabel[64];
 		snprintf(cloneCountLabel, sizeof(cloneCountLabel), "%d: Clone Count", i);
-
+#ifdef HasImGUI
 		ImGui::Text("Artboard %d: '%s'", i, ctx.m_Artboards[0].m_Artboard->name().c_str());
 		if (ImGui::Button("x"))
 		{
@@ -1472,11 +1489,13 @@ extern "C" void rive_frame(sg_pass_action* main_pass) {
 		}
 		ImGui::SameLine();
 		ImGui::SliderInt(cloneCountLabel, &ctx.m_CloneCount, 1, 10);
+#endif
 		UpdateArtboardCloneCount(ctx);
 
 		artboardLoaded = true;
 	}
 
+#ifdef HasImGUI
 	if (!artboardLoaded)
 	{
 		ImGui::Text("Drag and drop .riv file(s) to preview them.");
@@ -1504,6 +1523,7 @@ extern "C" void rive_frame(sg_pass_action* main_pass) {
 
 	mouseLastX = io.MousePos.x;
 	mouseLastY = io.MousePos.y;
+#endif
 
 	AppConfigure((rive::RenderMode) renderModeChoice, contourQuality, backgroundColor, clippingSupported);
 
@@ -1516,9 +1536,11 @@ extern "C" void rive_frame(sg_pass_action* main_pass) {
 	timeRenderRive = stm_now();
 	AppRenderRive(windowWidth, windowHeight);
 	timeRenderRive = stm_since(timeRenderRive);
-
+	
+#ifdef HasImGUI
 	ImGui::Render();
 	AppDrawImgui(ImGui::GetDrawData());
+#endif
 
 	sg_end_pass();
 	//sg_commit();
