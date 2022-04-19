@@ -317,9 +317,11 @@ void endframeImGUI(void);
 
 static void frame(void) {
 	
-    frame_scene();    rive_frame(&state.pass_action);
-	frameImGUI(&state.pass_action);
+	rive_frame(&state.pass_action);
 
+	
+ //   frame_scene();    
+	frameImGUI(&state.pass_action);
 
     sg_commit();
 	endframeImGUI();

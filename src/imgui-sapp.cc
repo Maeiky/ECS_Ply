@@ -454,8 +454,8 @@ ImGui::Begin("NewDockSpace", &popen, window_flags);
 
     // the sokol_gfx draw pass
     sg_begin_default_pass(&pass_action, width, height);
-
-//simgui_render();
+	
+   simgui_render();
   
   
     sg_end_pass();
