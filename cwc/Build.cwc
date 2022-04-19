@@ -24,9 +24,11 @@
 >
 -{vFlag}=""
 >
--{sShader}=MainShader |
-;Build Shader
-shdc --input {pSrc}/{sShader}.glsl --output {sShader}.glsl.h --slang glsl330:glsl100:glsl300es
+;Build main Shader
+shdc --input {pSrc}/MainShader.glsl --output {pSrc}/MainShader.glsl.h --slang glsl330:glsl100:glsl300es
+>
+;Build rive Shader
+shdc --input {pSrc}/rive.glsl --output {pSrc}/rive.glsl.h --slang glsl330:glsl100:glsl300es
 >
 ;Build App
 >
