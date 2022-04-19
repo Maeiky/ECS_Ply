@@ -18,8 +18,10 @@
 #include "rive.glsl.h"
 
 #ifdef SOKOL_GLCORE33
-#define HasImGUI
+//#define HasImGUI
 #endif
+
+#define HasImGUI_IO
 
 
 #define VIEWER_WINDOW_NAME "Rive Sokol Viewer"
@@ -775,7 +777,7 @@ static void AppDrawImgui(ImDrawData* drawData)
     // render the command list
     sg_apply_pipeline(g_app.m_ImguiPipeline);
     vs_imgui_params_t vs_params;
-	#ifdef HasImGUI
+	#ifdef HasImGUI_IO
     vs_params.x = ImGui::GetIO().DisplaySize.x;
     vs_params.y = ImGui::GetIO().DisplaySize.y;
 	#endif
@@ -1418,6 +1420,27 @@ void rive_cleanup()
 }
 
 
+extern "C" void rive_moveCamera(ImGuiIO& io){
+/*
+    static float mouseLastX         = 0.0f;
+    static float mouseLastY         = 0.0f;
+	if (!io.WantCaptureMouse){
+		{
+			if (io.MouseDown[0])
+			{
+				g_app.m_Camera.m_X    += io.MousePos.x - mouseLastX;
+				g_app.m_Camera.m_Y    += io.MousePos.y - mouseLastY;
+			}
+
+			g_app.m_Camera.m_Zoom += io.MouseWheel;
+		}
+		
+		mouseLastX = io.MousePos.x;
+		mouseLastY = io.MousePos.y;
+	}*/
+}
+
+
 extern "C" void rive_frame(sg_pass_action* main_pass) {
 
     static int windowWidth          = sapp_width();
@@ -1425,22 +1448,24 @@ extern "C" void rive_frame(sg_pass_action* main_pass) {
     static float dt                 = 0.0f;
     static float contourQuality     = 0.8888888888888889f;
     static int renderModeChoice     = (int) rive::getRenderMode(g_app.m_Ctx);
-    static float mouseLastX         = 0.0f;
-    static float mouseLastY         = 0.0f;
+
     static float backgroundColor[3] = { 0.25f, 0.25f, 0.25f };
     static bool clippingSupported   = rive::getClippingSupport(g_app.m_Renderer);
 	
     static uint64_t timeFrame;
     static uint64_t timeUpdateRive;
     static uint64_t timeRenderRive;
-	
+	static float mouseLastX         = 0.0f;
+    static float mouseLastY         = 0.0f;
 
 	dt             = (float) stm_sec(stm_laptime(&timeFrame));
-#ifdef HasImGUI
+#ifdef HasImGUI_IO
 	ImGuiIO& io    = ImGui::GetIO();
 	io.DisplaySize = ImVec2(float(windowWidth), float(windowHeight));
 	io.DeltaTime   = dt;
+#endif
 
+#ifdef HasImGUI
 	ImGui::NewFrame();
 	ImGui::SetNextWindowPos(ImVec2(0,0));
 	ImGui::Begin("Viewer Configuration");
@@ -1509,6 +1534,9 @@ extern "C" void rive_frame(sg_pass_action* main_pass) {
 	ImGui::Text("Rive Update Time: %.3f ms", (float) stm_ms(timeUpdateRive));
 	ImGui::Text("Rive Render Time: %.3f ms", (float) stm_ms(timeRenderRive));
 	ImGui::End();
+	
+#endif
+#ifdef HasImGUI_IO
 
 	if (!io.WantCaptureMouse)
 	{

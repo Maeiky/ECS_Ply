@@ -99,7 +99,6 @@ void CreateMenuBar(){
 
         ImGui::EndMenuBar();
     }
-
 }
 
 
@@ -112,12 +111,12 @@ extern "C" void frame_scene();
    ///   ImGuiID dockspace_right ;
     ///  ImGuiID dockspace_bot ;
          //  ImGuiID dockspace_right_bot ;
+
+extern "C" void rive_moveCamera(ImGuiIO& io);
+
 void CreateDockingSpace(){
 
  
-
-
-
 
     ImGui::GetStyle().Colors[ImGuiCol_DockingEmptyBg]  =ImVec4(0.20f, 0.20f, 0.20f, 0.50f);
     static ImGuiDockNodeFlags dockspace_flags = 0; //ImGuiDockNodeFlags_PassthruCentralNode
@@ -145,7 +144,7 @@ void CreateDockingSpace(){
 
 
     // DockSpace
-    ImGuiIO &io = ImGui::GetIO();
+    ImGuiIO &io =  ImGui::GetIO();
     if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
     {
          dockspace_id = ImGui::GetID("MyDockSpace");
@@ -328,6 +327,8 @@ extern "C" void frameImGUI(sg_pass_action* main_pass) {
     const int width = sapp_width();
     const int height = sapp_height();
     simgui_new_frame({ width, height, sapp_frame_duration(), sapp_dpi_scale() });
+
+rive_moveCamera(ImGui::GetIO());
 
     CreateDockingSpace();
 
