@@ -53,5 +53,5 @@ shdc --input {pSrc}/rive.glsl --output {pSrc}/rive.glsl.h --slang glsl330:glsl10
 -o {pObj} -#To {pOut}{sName}.* -{vLink} 
 -{vOS_FlagLink}
 -{vPreloadRc}
--L {pExtLib}rive/ -lrive
+-L {pExtLib}rive/{sFolder}/ -lrive
 >
