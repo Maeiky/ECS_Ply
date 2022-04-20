@@ -11,7 +11,7 @@
 > 
 -{_sDynamic}="so"
 >
--#Run Build.cwc -{_wToolchain}= "VLianceTool/WebRT"
+-#Run Build.cwc
 -{vPreloadRc}="--preload-file ../Rc/@Rc/"
 >
 -#Run

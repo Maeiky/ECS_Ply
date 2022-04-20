@@ -2,9 +2,11 @@
 >
 -{sToolChainName}=WebRT
 >
+-{sToolChainType}:=wasm
+>
 -{sName}=ECS_Ply_Emsc
 >
--{_sOpt}="OS"
+-{_sOpt}="O3"
 >
 -{vOS_FlagLink}=-s USE_WEBGL2=1 |
 -{vOS_Flag}=-DSOKOL_GLES3 -fdeclspec -DNDEBUG
