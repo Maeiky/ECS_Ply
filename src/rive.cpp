@@ -759,7 +759,7 @@ static void FillPaintData(rive::HRenderPaint paint, fs_paint_t& uniform)
     uniform.gradientStop[0]  = paintData.m_GradientLimits[2];
     uniform.gradientStop[1]  = paintData.m_GradientLimits[3];
 }
-
+/*
 // Adapted from https://github.com/floooh/sokol-samples/blob/master/glfw/imgui-glfw.cc
 static void AppDrawImgui(ImDrawData* drawData)
 {
@@ -791,10 +791,7 @@ static void AppDrawImgui(ImDrawData* drawData)
         const uint32_t idx_size  = cl->IdxBuffer.size() * sizeof(ImDrawIdx);
         const uint32_t vb_offset = sg_append_buffer(bind.vertex_buffers[0], { &cl->VtxBuffer.front(), vtx_size });
         const uint32_t ib_offset = sg_append_buffer(bind.index_buffer, { &cl->IdxBuffer.front(), idx_size });
-        /* don't render anything if the buffer is in overflow state (this is also
-            checked internally in sokol_gfx, draw calls that attempt from
-            overflowed buffers will be silently dropped)
-        */
+
         if (sg_query_buffer_overflow(bind.vertex_buffers[0]) ||
             sg_query_buffer_overflow(bind.index_buffer))
         {
@@ -822,7 +819,7 @@ static void AppDrawImgui(ImDrawData* drawData)
         }
     }
 }
-
+*/
 #define IS_BUFFER_VALID(b) (b != 0 && b->m_Handle.id != SG_INVALID_ID)
 
 static inline void GetCameraMatrix(mat4x4 M, uint32_t width, uint32_t height)
@@ -1427,15 +1424,18 @@ extern "C" void rive_moveCamera(ImGuiIO& io){
     static float mouseLastX         = 0.0f;
     static float mouseLastY         = 0.0f;
 	if (io.WantCaptureMouse){
+        
+		g_app.m_Camera.m_Zoom -= io.MouseWheel;
+
 		if (io.MouseDown[0])
 		{
-			g_app.m_Camera.m_X    += (io.MousePos.x - mouseLastX);
-			g_app.m_Camera.m_Y    += (io.MousePos.y - mouseLastY);
+            float zoom = g_app.m_Camera.Zoom();
+			g_app.m_Camera.m_X    += (io.MousePos.x - mouseLastX)*zoom;
+			g_app.m_Camera.m_Y    += (io.MousePos.y - mouseLastY)*zoom;
            // g_app.m_Camera.m_X    += (io.MousePos.x - mouseLastX)*2.0;
 			//g_app.m_Camera.m_Y    += (io.MousePos.y - mouseLastY)*2.0;
 		}
 
-		g_app.m_Camera.m_Zoom += io.MouseWheel;
 	}
 
 	mouseLastX = io.MousePos.x;
