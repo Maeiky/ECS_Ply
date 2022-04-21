@@ -17,6 +17,11 @@
 #include "rive/rive_render_api.h"
 #include "rive.glsl.h"
 
+struct ExampleAppConsole;
+extern ExampleAppConsole*  console_main;
+extern "C" void AddToConsole(ExampleAppConsole* cls, const char* format, ...);
+
+
 #ifdef SOKOL_GLCORE33
 //#define HasImGUI
 #endif
@@ -219,6 +224,7 @@ static void UpdateArtboardCloneCount(App::ArtboardContext& ctx)
 
 static void AddArtboardFromPath(const char* path)
 {
+    AddToConsole(console_main, path);
     App::ArtboardContext* ctx = 0;
 
     for (int i = 0; i < App::MAX_ARTBOARD_CONTEXTS; ++i)
@@ -1426,7 +1432,7 @@ extern "C" void rive_moveCamera(ImGuiIO& io){
     static float mouseLastY         = 0.0f;
 	if (io.WantCaptureMouse){
         
-		g_app.m_Camera.m_Zoom -= io.MouseWheel;
+		g_app.m_Camera.m_Zoom -= io.MouseWheel*3.0;
 
 		if (io.MouseDown[0])
 		{
@@ -1448,7 +1454,7 @@ extern "C" void rive_frame(sg_pass_action* main_pass) {
 
      int windowWidth          = sapp_width();
      int windowHeight         = sapp_height();
-    float backgroundColor[3] = { 0.25f, 0.25f, 0.25f };
+    float backgroundColor[3] = { main_pass->colors[0].value.r, main_pass->colors[0].value.g, main_pass->colors[0].value.b};
     float contourQuality     = 0.8888888888888889f;
 
 
@@ -1595,6 +1601,9 @@ sapp_desc sokol_main(int argc, char* argv[]) {
     return desc;
 }
 */
+
+
+
 void add_assets(void){
 	///// Add some assets
 	AddArtboardFromPath("Rc/runner.riv");
@@ -1605,7 +1614,7 @@ void add_assets(void){
 
     AddArtboardFromPath("Rc/dino.riv");
     AddArtboardFromPath("Rc/sword.riv");
-    AddArtboardFromPath("Rc/warrior.riv");
+    //AddArtboardFromPath("Rc/warrior.riv");
     AddArtboardFromPath("Rc/worm.riv");
     AddArtboardFromPath("Rc/fishbaloony.riv");
 	/////

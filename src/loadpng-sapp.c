@@ -108,6 +108,9 @@ char* LoadFile(char* path, size_t* size) {
 
 void iniImGUI(void);
 void rive_ini(void);
+void frameImGUI(sg_pass_action* main_pass);
+void rive_frame(sg_pass_action* main_pass);
+void endframeImGUI(void);
 
 
 static void init_cube(void) {
@@ -245,9 +248,14 @@ static void init(void) {
         .num_lanes = 1
     });
 
+    state.pass_action = (sg_pass_action) {
+        .colors[0] = {  .value = { 0.039f, 0.15f, 0.21f, 1.0f } }
+    };
+
     //init_cube();
 
-	iniImGUI();
+	iniImGUI();	
+
 
     rive_ini();
     
@@ -278,9 +286,6 @@ static void fetch_callback(const sfetch_response_t* response) {
 }
 
 
-void frameImGUI(sg_pass_action* main_pass);
-void rive_frame(sg_pass_action* main_pass);
-void endframeImGUI(void);
 
 /* The frame-function is fairly boring, note that no special handling is
    needed for the case where the texture isn't loaded yet.

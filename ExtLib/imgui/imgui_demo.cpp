@@ -178,7 +178,8 @@ Index of this file:
 static void ShowExampleAppDockSpace(bool* p_open);
 static void ShowExampleAppDocuments(bool* p_open);
 static void ShowExampleAppMainMenuBar();
- void ShowExampleAppConsole(bool* p_open);
+struct ExampleAppConsole;
+ ExampleAppConsole* ShowExampleAppConsole(bool* p_open, bool draw = true);
 static void ShowExampleAppLog(bool* p_open);
 static void ShowExampleAppLayout(bool* p_open);
 static void ShowExampleAppPropertyEditor(bool* p_open);
@@ -6595,7 +6596,7 @@ struct ExampleAppConsole
         Commands.push_back("CLASSIFY");
         AutoScroll = true;
         ScrollToBottom = false;
-        AddLog("Welcome to Dear ImGui!");
+       // AddLog("Welcome to Dear ImGui!");
     }
     ~ExampleAppConsole()
     {
@@ -6727,6 +6728,10 @@ struct ExampleAppConsole
             bool has_color = false;
             if (strstr(item, "[error]"))          { color = ImVec4(1.0f, 0.4f, 0.4f, 1.0f); has_color = true; }
             else if (strncmp(item, "# ", 2) == 0) { color = ImVec4(1.0f, 0.8f, 0.6f, 1.0f); has_color = true; }
+            else{
+                color = ImVec4(1.0f, 0.8f, 0.6f, 1.0f); has_color = true;
+            }
+
             if (has_color)
                 ImGui::PushStyleColor(ImGuiCol_Text, color);
             ImGui::TextUnformatted(item);
@@ -6916,11 +6921,22 @@ struct ExampleAppConsole
     }
 };
 
- void ShowExampleAppConsole(bool* p_open)
+ ExampleAppConsole* ShowExampleAppConsole(bool* p_open, bool draw)
 {
     static ExampleAppConsole console;
-    console.Draw("Console", p_open);
+    if(draw){
+        console.Draw("Console", p_open);
+    }
+    return &console;
 }
+
+
+extern "C" void AddToConsole(ExampleAppConsole* cls, const char* format, ...){
+    va_list _arg_;va_start (_arg_, format);
+    cls->AddLog(format, _arg_);
+}
+
+
 
 //-----------------------------------------------------------------------------
 // [SECTION] Example App: Debug Log / ShowExampleAppLog()

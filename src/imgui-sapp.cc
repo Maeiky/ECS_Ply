@@ -20,8 +20,14 @@ namespace ImGui {
     void SetNextWindowDockID(ImGuiID id, ImGuiCond cond);
 }
 
+struct ExampleAppConsole;
+ExampleAppConsole*  console_main;
+extern  ExampleAppConsole* ShowExampleAppConsole(bool* p_open, bool draw);
 
-extern  void ShowExampleAppConsole(bool* p_open);
+extern "C" void create_console(bool draw = true){
+    bool popen = true;
+  console_main =   ShowExampleAppConsole(&popen, draw);
+}
 
 
 static sg_pass_action pass_action;
@@ -57,6 +63,8 @@ extern "C" void iniImGUI(void) {
     // initial clear color
     pass_action.colors[0].action = SG_ACTION_LOAD;
     pass_action.colors[0].value = { 0.0f, 0.5f, 0.7f, 0.0f };
+
+    create_console(false);
 }
 
 
@@ -366,9 +374,8 @@ extern "C" void frameImGUI(sg_pass_action* main_pass) {
 bool popen = true;
 
  // ImGui::SetNextWindowDockID(dockspace_bot, ImGuiCond_Once);
-     ShowExampleAppConsole(&popen);
 
-
+    create_console();
 
 
      ImGui::ShowMetricsWindow(&popen); 
