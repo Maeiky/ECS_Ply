@@ -109,20 +109,9 @@ char* LoadFile(char* path, size_t* size) {
 void iniImGUI(void);
 void rive_ini(void);
 
-static void init(void) {
-    /* setup sokol-gfx and the optional debug-ui*/
-    sg_setup(&(sg_desc){
-        .context = sapp_sgcontext()
-    });
-    __dbgui_setup(sapp_sample_count());
 
-    /* setup sokol-fetch with the minimal "resource limits" */
-    sfetch_setup(&(sfetch_desc_t){
-        .max_requests = 1,
-        .num_channels = 1,
-        .num_lanes = 1
-    });
-
+static void init_cube(void) {
+    
     /* pass action for clearing the framebuffer to some color */
     state.pass_action = (sg_pass_action) {
         .colors[0] = { .action = SG_ACTION_CLEAR, .value = { 0.125f, 0.25f, 0.35f, 1.0f } }
@@ -237,8 +226,25 @@ load_png(file, file_size);
         .buffer_size = sizeof(state.file_buffer)
     });
     printf("%s\n", path_buf);
-	
+}
 
+
+static void init(void) {
+   
+	 /* setup sokol-gfx and the optional debug-ui*/
+    sg_setup(&(sg_desc){
+        .context = sapp_sgcontext()
+    });
+    __dbgui_setup(sapp_sample_count());
+
+    /* setup sokol-fetch with the minimal "resource limits" */
+    sfetch_setup(&(sfetch_desc_t){
+        .max_requests = 1,
+        .num_channels = 1,
+        .num_lanes = 1
+    });
+
+    //init_cube();
 
 	iniImGUI();
 

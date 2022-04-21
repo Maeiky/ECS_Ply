@@ -76,7 +76,7 @@ static struct App
         {
             m_X    = 0.0f;
             m_Y    = 0.0f;
-            m_Zoom = (float) ZOOM_MULTIPLIER * 2.0f;
+            m_Zoom = (float) ZOOM_MULTIPLIER;
         }
 
         float Zoom()
@@ -777,10 +777,10 @@ static void AppDrawImgui(ImDrawData* drawData)
     // render the command list
     sg_apply_pipeline(g_app.m_ImguiPipeline);
     vs_imgui_params_t vs_params;
-	#ifdef HasImGUI_IO
+	//#ifdef HasImGUI_IO
     vs_params.x = ImGui::GetIO().DisplaySize.x;
     vs_params.y = ImGui::GetIO().DisplaySize.y;
-	#endif
+	//#endif
     sg_apply_uniforms(SG_SHADERSTAGE_VS, 0, SG_RANGE(vs_params));
     for (int cl_index = 0; cl_index < drawData->CmdListsCount; cl_index++)
     {
@@ -1429,8 +1429,10 @@ extern "C" void rive_moveCamera(ImGuiIO& io){
 	if (io.WantCaptureMouse){
 		if (io.MouseDown[0])
 		{
-			g_app.m_Camera.m_X    += (io.MousePos.x - mouseLastX)*2.0;
-			g_app.m_Camera.m_Y    += (io.MousePos.y - mouseLastY)*2.0;
+			g_app.m_Camera.m_X    += (io.MousePos.x - mouseLastX);
+			g_app.m_Camera.m_Y    += (io.MousePos.y - mouseLastY);
+           // g_app.m_Camera.m_X    += (io.MousePos.x - mouseLastX)*2.0;
+			//g_app.m_Camera.m_Y    += (io.MousePos.y - mouseLastY)*2.0;
 		}
 
 		g_app.m_Camera.m_Zoom += io.MouseWheel;
@@ -1443,8 +1445,8 @@ extern "C" void rive_moveCamera(ImGuiIO& io){
 
 extern "C" void rive_frame(sg_pass_action* main_pass) {
 
-    static int windowWidth          = sapp_width();
-    static int windowHeight         = sapp_height();
+     int windowWidth          = sapp_width();
+     int windowHeight         = sapp_height();
     static float dt                 = 0.0f;
     static float contourQuality     = 0.8888888888888889f;
     static int renderModeChoice     = (int) rive::getRenderMode(g_app.m_Ctx);
