@@ -233,7 +233,8 @@ static void init(void) {
    
 	 /* setup sokol-gfx and the optional debug-ui*/
     sg_setup(&(sg_desc){
-        .context = sapp_sgcontext()
+        .context = sapp_sgcontext(),
+        .buffer_pool_size    =  4096,
     });
     __dbgui_setup(sapp_sample_count());
 

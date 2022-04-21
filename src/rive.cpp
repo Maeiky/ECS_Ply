@@ -30,7 +30,7 @@ typedef ImVec2 vs_imgui_params_t;
 
 static struct App
 {
-    static const int MAX_ARTBOARD_CONTEXTS = 8;
+    static const int MAX_ARTBOARD_CONTEXTS = 16;
     static const int MAX_IMGUI_VERTICES    = (1<<16);
     static const int MAX_IMGUI_INDICES     = MAX_IMGUI_VERTICES * 3;
 
@@ -75,8 +75,9 @@ static struct App
         void Reset()
         {
             m_X    = 0.0f;
-            m_Y    = 0.0f;
-            m_Zoom = (float) ZOOM_MULTIPLIER;
+            m_Y    = -200.0f;
+           // m_Zoom = (float) ZOOM_MULTIPLIER;
+            m_Zoom = (float) ZOOM_MULTIPLIER*2.0;
         }
 
         float Zoom()
@@ -1447,11 +1448,13 @@ extern "C" void rive_frame(sg_pass_action* main_pass) {
 
      int windowWidth          = sapp_width();
      int windowHeight         = sapp_height();
+    float backgroundColor[3] = { 0.25f, 0.25f, 0.25f };
+    float contourQuality     = 0.8888888888888889f;
+
+
     static float dt                 = 0.0f;
-    static float contourQuality     = 0.8888888888888889f;
     static int renderModeChoice     = (int) rive::getRenderMode(g_app.m_Ctx);
 
-    static float backgroundColor[3] = { 0.25f, 0.25f, 0.25f };
     static bool clippingSupported   = rive::getClippingSupport(g_app.m_Renderer);
 	
     static uint64_t timeFrame;
@@ -1595,6 +1598,16 @@ sapp_desc sokol_main(int argc, char* argv[]) {
 void add_assets(void){
 	///// Add some assets
 	AddArtboardFromPath("Rc/runner.riv");
+    AddArtboardFromPath("Rc/juice.riv");
+    AddArtboardFromPath("Rc/marty.riv");
+    AddArtboardFromPath("Rc/car.riv");
+    AddArtboardFromPath("Rc/zombie_leg.riv");
+
+    AddArtboardFromPath("Rc/dino.riv");
+    AddArtboardFromPath("Rc/sword.riv");
+    AddArtboardFromPath("Rc/warrior.riv");
+    AddArtboardFromPath("Rc/worm.riv");
+    AddArtboardFromPath("Rc/fishbaloony.riv");
 	/////
 }
 
