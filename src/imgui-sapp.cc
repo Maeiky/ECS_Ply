@@ -183,14 +183,11 @@ void CreateDockingSpace(){
      
      
 ImGuiID dockspace_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.35f, nullptr, &dockspace_id);
-ImGuiID dockspace_right_bot = ImGui::DockBuilderSplitNode(dockspace_right, ImGuiDir_Up, 0.35f, nullptr, &dockspace_right);
-ImGuiID dockspace_right_bot_bot = ImGui::DockBuilderSplitNode(dockspace_right_bot, ImGuiDir_Up, 0.40f, nullptr, &dockspace_right_bot);
-
-
+ImGuiID dockspace_right_bot = ImGui::DockBuilderSplitNode(dockspace_right, ImGuiDir_Up, 0.45f, nullptr, &dockspace_right);
+ImGuiID dockspace_right_bot_bot = ImGui::DockBuilderSplitNode(dockspace_right_bot, ImGuiDir_Up, 0.65f, nullptr, &dockspace_right_bot);
 
             ImGui::DockBuilderDockWindow("Metrics",         dockspace_right);
-          //  ImGui::DockBuilderDockWindow("Stack",         ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id));
-
+  
             ImGui::DockBuilderDockWindow("Style",    ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.65f,  nullptr, &dockspace_id));
 
             ImGuiID dockspace_bot = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 0.5f, nullptr, &dockspace_id);
@@ -198,8 +195,8 @@ ImGuiID dockspace_right_bot_bot = ImGui::DockBuilderSplitNode(dockspace_right_bo
             ImGui::DockBuilderDockWindow("###Scene",        dockspace_id);
 
 
-  ImGui::DockBuilderDockWindow("Stack",        dockspace_right_bot);
-  ImGui::DockBuilderDockWindow("Debug",        dockspace_right_bot_bot);
+    ImGui::DockBuilderDockWindow("Stack",        dockspace_right_bot);
+    ImGui::DockBuilderDockWindow("Debug",        dockspace_right_bot_bot);
 
 
 
@@ -332,6 +329,7 @@ struct ImGuiDockPreviewData
 };*/
 
 
+extern "C" void ImGUI_mainpage();
 
 extern "C" void frameImGUI(sg_pass_action* main_pass) {
 	
@@ -352,12 +350,10 @@ extern "C" void frameImGUI(sg_pass_action* main_pass) {
     ImGui::Begin("Debug");
         ImGui::ColorEdit3("clear color", &main_pass->colors[0].value.r);
 
-        if (ImGui::Button("Test Window")) show_test_window ^= 1;
+      //  if (ImGui::Button("Test Window")) show_test_window ^= 1;
         ImGui::Text("w: %d, h: %d, dpi_scale: %.1f", sapp_width(), sapp_height(), sapp_dpi_scale());
 
-        if (ImGui::Button(sapp_is_fullscreen() ? "Switch to windowed" : "Switch to fullscreen")) {
-        sapp_toggle_fullscreen();
-        }
+      //  if (ImGui::Button(sapp_is_fullscreen() ? "Switch to windowed" : "Switch to fullscreen")) {sapp_toggle_fullscreen();}
 		
 	
     ImGui::End();
@@ -369,6 +365,11 @@ extern "C" void frameImGUI(sg_pass_action* main_pass) {
 
 
     CreateContextWindow();
+
+
+
+    ImGUI_mainpage();
+
 
 
 bool popen = true;
