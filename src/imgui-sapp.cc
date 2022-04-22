@@ -318,8 +318,11 @@ void CreateContextWindow(){
 if (ImGui::GetIO().MouseDown[0]){
     ImGuiContext* ctx = GImGui;
     ImGuiContext& g = *ctx;
+
+
+  //  ImGui::GetID("Scene")
         ImGuiWindow* window =  ImGui::FindWindowByName("###Scene");
-   AddToConsole(console_main, "ID: 0x%08X , GImGui->ActiveId: 0x%08X",ImGui::GetID("###Scene"), GImGui->ActiveIdWindow );
+   AddToConsole(console_main, "ID: 0x%08X , GImGui->ActiveId: 0x%08X",window, GImGui->ActiveIdWindow );
 }
 
 //https://github.com/ocornut/imgui/issues/4430
