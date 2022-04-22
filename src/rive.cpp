@@ -501,7 +501,7 @@ static int i = 0;i++;
 
 
 
-
+rive::Artboard* gbl_artboard;
 
 void AppUpdateRive(float dt, uint32_t width, uint32_t height)
 {
@@ -532,13 +532,15 @@ void AppUpdateRive(float dt, uint32_t width, uint32_t height)
  rive::StateMachine* state_machine= artboard->firstStateMachine();
  rive::StateMachineInstance* state_machine_inst = StateMachineGetInstance(state_machine);
  
-           if (state_machine_inst != nullptr){
-				state_machine_inst->advance(artboard, dt);
-			}
+         
             if (animation){
               animation->advance(dt);
               animation->apply(artboard, 1);
             } 
+            if (state_machine_inst != nullptr){
+				state_machine_inst->advance(artboard, dt);
+			}
+
 
             artboard->advance(dt);
             artboard->draw(renderer);
@@ -548,8 +550,149 @@ void AppUpdateRive(float dt, uint32_t width, uint32_t height)
             {
                 y += artboardBounds.height();
             }
+
+
+
+
+
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+
+static int animationIndex = 0;
+static int stateMachineIndex = -1;
+gbl_artboard = artboard;
+        if (artboard != nullptr)
+		{
+			ImGui::Begin(artboard->name().c_str(), nullptr);
+			if (ImGui::ListBox(
+			        "Animations",
+			        &animationIndex,
+			        [](void* data, int index, const char** name) {
+				        const char* animationName = gbl_artboard->animation(index)->name().c_str();
+				        *name = animationName;
+				        return true;
+			        },
+			        artboard,
+			        artboard->animationCount(),
+			        4))
+			{
+				stateMachineIndex = -1;
+				//initAnimation(animationIndex);
+			}
+			if (ImGui::ListBox(
+			        "State Machines",
+			        &stateMachineIndex,
+			        [](void* data, int index, const char** name) {
+				        const char* machineName = gbl_artboard->stateMachine(index)->name().c_str();
+				        *name = machineName;
+				        return true;
+			        },
+			        artboard,
+			        artboard->stateMachineCount(),
+			        4))
+			{
+				animationIndex = -1;
+				//initStateMachine(stateMachineIndex);
+			}
+			if (state_machine_inst != nullptr)
+			{
+
+				ImGui::Columns(2);
+				ImGui::SetColumnWidth(0, ImGui::GetWindowWidth() * 0.6666);
+
+				for (int i = 0; i < state_machine_inst->inputCount(); i++)
+				{
+					auto inputInstance = state_machine_inst->input(i);
+
+					if (inputInstance->input()->is<rive::StateMachineNumber>())
+					{
+						// ImGui requires names as id's, use ## to hide the
+						// label but still give it an id.
+						char label[256];
+						snprintf(label, 256, "##%u", i);
+
+						auto number =
+						    static_cast<rive::SMINumber*>(inputInstance);
+						float v = number->value();
+						ImGui::InputFloat(label, &v, 1.0f, 2.0f, "%.3f");
+						number->value(v);
+						ImGui::NextColumn();
+					}
+					else if (inputInstance->input()
+					             ->is<rive::StateMachineTrigger>())
+					{
+						// ImGui requires names as id's, use ## to hide the
+						// label but still give it an id.
+						char label[256];
+						snprintf(label, 256, "Fire##%u", i);
+						if (ImGui::Button(label))
+						{
+							auto trigger =
+							    static_cast<rive::SMITrigger*>(inputInstance);
+							trigger->fire();
+						}
+						ImGui::NextColumn();
+					}
+					else if (inputInstance->input()
+					             ->is<rive::StateMachineBool>())
+					{
+						// ImGui requires names as id's, use ## to hide the
+						// label but still give it an id.
+						char label[256];
+						snprintf(label, 256, "##%u", i);
+						auto boolInput =
+						    static_cast<rive::SMIBool*>(inputInstance);
+						bool value = boolInput->value();
+
+						ImGui::Checkbox(label, &value);
+						boolInput->value(value);
+						ImGui::NextColumn();
+					}
+					ImGui::Text("%s", inputInstance->input()->name().c_str());
+					ImGui::NextColumn();
+				}
+
+				ImGui::Columns(1);
+			}
+        }
+
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
     }
+
+    /////////////////
+
+
+
+
+
+
+///////
 }
 
 static void FillPaintData(rive::HRenderPaint paint, fs_paint_t& uniform)
