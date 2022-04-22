@@ -315,8 +315,29 @@ if( window->Active){
 }*/
 
     //draw FBO
+bool focus = false;
+//ImGuiIO io = ImGui::GetIO();
+if( ImGui::IsWindowFocused() ){
+	
+//ImGuiWindow* window =  ImGui::FindWindowByName("###Scene");
+//if( window != 0  && window->LastFrameJustFocused){
+    //if(GImGui->ActiveId == ImGui::GetID("Scene")){
+       // rive_moveCamera(io);
+    //}
+
+//focus=true;
+//}
+    // 
+}
 
    // ImGui::Image((void *)m_frameBufferTextureID, availableSize, ImVec2(0, 1),ImVec2(1, 0));
+
+if(focus){
+    AddToConsole(console_main, "x:%d, y%d", ImGui::GetIO().MousePos.x , ImGui::GetIO().MousePos.y);
+
+  rive_moveCamera(ImGui::GetIO() );
+}
+
     ImGui::End();
 
 /*
@@ -493,13 +514,7 @@ ImGui::Begin("NewDockSpace", &popen, window_flags);
 
 
 
-	
-ImGuiWindow* window =  ImGui::FindWindowByName("###Scene");
-if( window != 0  && window->LastFrameJustFocused){
-    //if(GImGui->ActiveId == ImGui::GetID("Scene")){
-        rive_moveCamera(ImGui::GetIO() );
-    //}
-}
+
 
 
 

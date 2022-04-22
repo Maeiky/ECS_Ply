@@ -1191,8 +1191,8 @@ extern "C" void rive_moveCamera(ImGuiIO& io){
 
 	io.DisplaySize = ImVec2(float(sapp_width()), float(sapp_height()));
 	
-    static float mouseLastX         = 0.0f;
-    static float mouseLastY         = 0.0f;
+    static float mouseLastX         = io.MousePos.x ;
+    static float mouseLastY         = io.MousePos.y;
 
 	if (io.WantCaptureMouse){
         
