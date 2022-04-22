@@ -64,6 +64,7 @@ static struct App
     {
         rive::Artboard*                m_Artboard;
         rive::LinearAnimationInstance* m_AnimationInstance;
+        const char* m_file;
     };
 
     struct ArtboardContext
@@ -266,7 +267,8 @@ static void AddArtboardFromPath(const char* path)
 
             App::ArtboardData data = {
                 .m_Artboard          = artboard,
-                .m_AnimationInstance = 0
+                .m_AnimationInstance = 0,
+                .m_file = path
             };
 
             if (artboard->animationCount() > 0)
@@ -567,7 +569,10 @@ static int stateMachineIndex = -1;
 gbl_artboard = artboard;
         if (artboard != nullptr)
 		{
-			ImGui::Begin(artboard->name().c_str(), nullptr);
+			//ImGui::Begin(artboard->name().c_str(), nullptr);
+			ImGui::Begin(data.m_file, nullptr);
+
+            
 			if (ImGui::ListBox(
 			        "Animations",
 			        &animationIndex,
