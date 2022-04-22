@@ -505,6 +505,7 @@ rive::Artboard* gbl_artboard;
 
 void AppUpdateRive(float dt, uint32_t width, uint32_t height)
 {
+
     rive::newFrame(g_app.m_Renderer);
     rive::Renderer* renderer = (rive::Renderer*) g_app.m_Renderer;
 
@@ -657,6 +658,7 @@ gbl_artboard = artboard;
 
 				ImGui::Columns(1);
 			}
+            	ImGui::End();
         }
 
 ///////////////////////////////
@@ -686,9 +688,6 @@ gbl_artboard = artboard;
     }
 
     /////////////////
-
-
-
 
 
 

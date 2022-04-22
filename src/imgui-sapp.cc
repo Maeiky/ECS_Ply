@@ -357,13 +357,21 @@ struct ImGuiDockPreviewData
 
 extern "C" void ImGUI_mainpage();
 
-extern "C" void frameImGUI(sg_pass_action* main_pass) {
 
+extern "C" void ImGUI_begin_frame(){
 
     const int width = sapp_width();
     const int height = sapp_height();
     simgui_new_frame({ width, height, sapp_frame_duration(), sapp_dpi_scale() });
 
+
+}
+
+extern "C" void frameImGUI(sg_pass_action* main_pass) {
+
+    
+    const int width = sapp_width();
+    const int height = sapp_height();
 
 
     CreateDockingSpace();

@@ -326,9 +326,10 @@ static void fetch_callback(const sfetch_response_t* response) {
 	    sg_end_pass();
 		
 }
-
+void ImGUI_begin_frame();
 static void frame(void) {
-	
+    
+	ImGUI_begin_frame();
 	rive_frame(&state.pass_action);
 
 	
