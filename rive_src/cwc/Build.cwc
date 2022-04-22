@@ -1,0 +1,80 @@
+-{vFlag}=""
+>
+-{sOut}={_sPlatform}_{_sOpt}_{_sConfig_Type}
+>
+-{p3p}=../third-party/
+-{pRive}=../rive-cpp_low_level_rendering/
+;-{pRiveSokol}=../src_glfw/
+-{pRiveSokol}=../src_sapp/
+-{pTess}={p3p}libtess/
+;-{pGLFW}=../GLFW/
+;-{pGLFWsrc}=../GLFW/src/
+-{pRc}=../Rc/
+-{pOut}=_out/{sOut}/
+>
+-{vIncl}=
+-I ../include/ 
+-I {p3p}
+-I {p3p}imgui/
+-I {p3p}sokol/
+-I {pRive}include/
+-I {pRiveSokol}
+;-I {pGLFW}include/
+-I {pTess}Include/
+>
+-{vInclEx}=
+-I {p3p}imgui/
+-I {p3p}sokol/util/
+-I {p3p}nanosvg/src/
+;-I {p3p}Freetype/
+>
+;Build Engine
+-c {pRive}/src/  -o obj/{sOut}/lib/rive/ -std=c++2a
+-{vIncl}
+-{vOS_Flag}
+-D_USE_MATH_DEFINES
+-DLOW_LEVEL_RENDERING
+-DCONTOUR_RECURSIVE
+>
+;Build Shader
+shdc --input {pRiveSokol}/shaders.glsl --output {pRiveSokol}/shaders.glsl.h --slang glsl330:glsl100:glsl300es
+>
+;Build rive sokol
+-c {pRiveSokol}rive/ -o obj/{sOut}/lib/rive_sokol/
+-{vIncl}
+-{vOS_Flag}
+>
+;Build libtess2
+-c {p3p}libtess/Source/ -o obj/{sOut}/lib/libtess/
+-{vIncl} -{vOS_Flag} -{vInclEx}
+>
+;Generate Dynamic Lib
+;-o obj/{sOut}/lib/ -#To Lib/{sOut}/rive.{_sDynamic}
+>
+;Generate Static Lib
+-o obj/{sOut}/lib/ -#To Lib/{sOut}/librive.a
+>
+;Build stb
+-c {p3p}stb/ -o obj/{sOut}/stb/
+-{vIncl} -{vOS_Flag} -{vInclEx}
+>
+;Build imgui
+-c &{p3p}imgui/ -o obj/{sOut}/imgui/
+-{vIncl} -{vOS_Flag} -{vInclEx}
+>
+;Build sokol
+-c {p3p}sokol/ -o obj/{sOut}/sokol/
+-{vIncl} -{vOS_Flag} -{vInclEx} -DSOKOL_GLCORE33
+>
+;Build an Example
+-c &{pRiveSokol} -o obj/{sOut}/
+-{vIncl}
+-{vOS_Flag}
+>
+-#Copy {pRc} {pOut}Rc/
+>
+;Generate executable
+-o obj/{sOut}/ -#To {pOut}App.*
+-{vOS_FlagLink} -{vPreloadRc}
+>
+-#Run

@@ -1,0 +1,13 @@
+diff --git a/include/rive/importers/import_stack.hpp b/include/rive/importers/import_stack.hpp
+index e3fd3b1..e0ab287 100644
+--- a/include/rive/importers/import_stack.hpp
++++ b/include/rive/importers/import_stack.hpp
+@@ -6,6 +6,8 @@
+ #include <vector>
+ #include <algorithm>
+ 
++#include <stdint.h>
++
+ namespace rive
+ {
+ 	class ImportStackObject

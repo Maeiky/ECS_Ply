@@ -459,6 +459,11 @@ void AppUpdateRive(float dt, uint32_t width, uint32_t height)
                animation->apply(artboard, 1);
             }
 
+ rive::StateMachine* state= artboard->firstStateMachine();
+ if(state){
+    state->input(50);
+ }
+
             artboard->advance(dt);
             artboard->draw(renderer);
             renderer->restore();
@@ -1693,6 +1698,8 @@ sapp_desc sokol_main(int argc, char* argv[]) {
 
 void add_assets(void){
 	///// Add some assets
+    AddArtboardFromPath("Rc/tree.riv");
+    
 	AddArtboardFromPath("Rc/runner.riv");
     AddArtboardFromPath("Rc/juice.riv");
     AddArtboardFromPath("Rc/marty.riv");
@@ -1704,6 +1711,7 @@ void add_assets(void){
     //AddArtboardFromPath("Rc/warrior.riv");
     AddArtboardFromPath("Rc/worm.riv");
     AddArtboardFromPath("Rc/fishbaloony.riv");
+
 	/////
 }
 
