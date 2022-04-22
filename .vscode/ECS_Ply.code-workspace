@@ -9,7 +9,28 @@
 			"sokol_app.h": "c",
 			"chrono": "cpp",
 			"system_error": "cpp",
-			"xutility": "cpp"
+			"xutility": "cpp",
+			"*.rh": "cpp",
+			"algorithm": "cpp",
+			"charconv": "cpp",
+			"deque": "cpp",
+			"fstream": "cpp",
+			"iomanip": "cpp",
+			"istream": "cpp",
+			"iterator": "cpp",
+			"list": "cpp",
+			"random": "cpp",
+			"regex": "cpp",
+			"sstream": "cpp",
+			"variant": "cpp",
+			"vector": "cpp",
+			"xlocale": "cpp",
+			"xlocbuf": "cpp",
+			"xlocmon": "cpp",
+			"xlocnum": "cpp",
+			"xstring": "cpp",
+			"iosfwd": "cpp",
+			"optional": "cpp"
 		}
 	}
 }

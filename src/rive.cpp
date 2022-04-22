@@ -11,6 +11,16 @@
 #include <linmath.h>
 
 #include <rive/animation/linear_animation_instance.hpp>
+#include <rive/animation/state_machine_input_instance.hpp>
+
+#include "rive/animation/state_machine_instance.hpp"
+#include "rive/animation/state_machine_input.hpp"
+#include "rive/animation/state_machine_bool.hpp"
+#include "rive/animation/state_machine_number.hpp"
+#include "rive/animation/state_machine_trigger.hpp"
+
+
+#include <rive/animation/state_machine_input_instance.hpp>
 #include <rive/artboard.hpp>
 #include <rive/file.hpp>
 
@@ -426,6 +436,69 @@ static void AppDropCallback(GLFWwindow* window, int count, const char** paths)
     }
 }*/
 
+/*
+SMIBool* StateMachineInstance::getBool(std::string name) const
+{
+	for (int i = 0; i < m_InputCount; i++)
+	{
+		auto input = m_InputInstances[i]->input();
+		if (input->is<StateMachineBool>() && input->name() == name)
+		{
+			return static_cast<SMIBool*>(m_InputInstances[i]);
+		}
+	}return static_cast<SMIBool*>(m_InputInstances[i]);
+	return nullptr;
+}
+*/
+//Test
+static void StateMachineGetInstance(rive::StateMachine* machine) {
+if(machine == 0){return;}
+
+rive::StateMachineInstance*  stateMachineInstance = new rive::StateMachineInstance(machine);
+
+	size_t m_InputCount = machine->inputCount();
+	for (int i = 0; i < m_InputCount; i++)
+	{
+		const rive::StateMachineInput* input = machine->input(i);
+		if (input == nullptr){continue;}
+
+		switch (input->coreType())
+		{
+			case rive::StateMachineBool::typeKey:{
+   
+                rive::SMIBool* in =  stateMachineInstance->getBool(input->name());
+                //in->value(false);   
+
+                }break;
+			case rive::StateMachineNumber::typeKey:{
+
+                 rive::SMINumber* in =  stateMachineInstance->getNumber(input->name());
+                in->value(50);   
+                }break;
+			case rive::StateMachineTrigger::typeKey:{
+
+		         rive::SMITrigger* in =  stateMachineInstance->getTrigger(input->name());
+                //in->value(50);   
+                }break;
+			default:
+				// Sanity check.
+				//m_InputInstances[i] = nullptr;
+				break;
+		}
+	}
+
+	size_t m_LayerCount = machine->layerCount();
+//	m_Layers = new StateMachineLayerInstance[m_LayerCount];
+	for (int i = 0; i < m_LayerCount; i++)
+	{
+       // rive::StateMachineLayerInstance* machine->layer(i);
+        //do something
+	}
+}
+
+
+
+
 
 void AppUpdateRive(float dt, uint32_t width, uint32_t height)
 {
@@ -460,10 +533,8 @@ void AppUpdateRive(float dt, uint32_t width, uint32_t height)
             }
 
  rive::StateMachine* state= artboard->firstStateMachine();
- if(state){
-    state->input(50);
- }
-
+ StateMachineGetInstance(state);
+ 
             artboard->advance(dt);
             artboard->draw(renderer);
             renderer->restore();
