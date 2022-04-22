@@ -305,25 +305,32 @@ void CreateContextWindow(){
 
    // ImGuiContext g =  *GImGui;
 
-
-
+//window->WasActive ||
+/*
+ImGuiWindow* window =  ImGui::FindWindowByName("###Scene");
+if( window->Active){
     //if(GImGui->ActiveId == ImGui::GetID("Scene")){
         rive_moveCamera(ImGui::GetIO() );
     //}
+}*/
 
     //draw FBO
+
    // ImGui::Image((void *)m_frameBufferTextureID, availableSize, ImVec2(0, 1),ImVec2(1, 0));
     ImGui::End();
 
+/*
 if (ImGui::GetIO().MouseDown[0]){
     ImGuiContext* ctx = GImGui;
     ImGuiContext& g = *ctx;
 
-
   //  ImGui::GetID("Scene")
         ImGuiWindow* window =  ImGui::FindWindowByName("###Scene");
+if(window->WasActive || window->Active){
    AddToConsole(console_main, "ID: 0x%08X , GImGui->ActiveId: 0x%08X",window, GImGui->ActiveIdWindow );
 }
+
+}*/
 
 //https://github.com/ocornut/imgui/issues/4430
 }
@@ -348,7 +355,8 @@ struct ImGuiDockPreviewData
 extern "C" void ImGUI_mainpage();
 
 extern "C" void frameImGUI(sg_pass_action* main_pass) {
-	
+
+
     const int width = sapp_width();
     const int height = sapp_height();
     simgui_new_frame({ width, height, sapp_frame_duration(), sapp_dpi_scale() });
@@ -482,6 +490,16 @@ ImGui::Begin("NewDockSpace", &popen, window_flags);
             //    DockContextQueueDock(ctx, window, split_data->SplitNode, payload_window, split_data->SplitDir, split_data->SplitRatio, split_data == &split_outer);
       //BeginDockableDragDropTarget
 // DockContextProcessDock(ctx, &dc->Requests[n]);
+
+
+
+	
+ImGuiWindow* window =  ImGui::FindWindowByName("###Scene");
+if( window != 0  && window->LastFrameJustFocused){
+    //if(GImGui->ActiveId == ImGui::GetID("Scene")){
+        rive_moveCamera(ImGui::GetIO() );
+    //}
+}
 
 
 
