@@ -23,6 +23,8 @@ namespace ImGui {
 struct ExampleAppConsole;
 ExampleAppConsole*  console_main;
 extern  ExampleAppConsole* ShowExampleAppConsole(bool* p_open, bool draw);
+extern "C" void AddToConsole(ExampleAppConsole* cls, const char* format, ...);
+
 
 extern "C" void create_console(bool draw = true){
     bool popen = true;
@@ -254,6 +256,7 @@ void CreateContextWindow(){
     sprintf(buf, "Scene, Fps:%.2f %c Frame:%d  ###Scene", ImGui::GetIO().Framerate, "|/-\\"[(int)(ImGui::GetTime() / 0.25f) & 3], ImGui::GetFrameCount());
 
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 1.0f, 0.0f));
+    
     ImGui::Begin(buf);
     ImGui::PopStyleColor();
     //ImGuiDockNodeFlags_PassthruCentralNode
@@ -300,15 +303,22 @@ void CreateContextWindow(){
     }
     */
 
+   // ImGuiContext g =  *GImGui;
 
-	rive_moveCamera(ImGui::GetIO());
-	
+
+
+    if(GImGui->ActiveId == ImGui::GetID("Scene")){
+        rive_moveCamera(ImGui::GetIO() );
+    }
+
     //draw FBO
    // ImGui::Image((void *)m_frameBufferTextureID, availableSize, ImVec2(0, 1),ImVec2(1, 0));
     ImGui::End();
-
-
-
+/*
+if (ImGui::GetIO().MouseDown[0]){
+   AddToConsole(console_main, "ID: 0x%08X , GImGui->ActiveId: 0x%08X",ImGui::GetID("Scene"), GImGui->ActiveId );
+}
+*/
 //https://github.com/ocornut/imgui/issues/4430
 }
 
@@ -381,6 +391,16 @@ bool popen = true;
 
      ImGui::ShowMetricsWindow(&popen); 
 
+
+/*
+   ImGui::Begin("Style", &popen);
+ImGuiContext& g = *GImGui;
+const ImGuiID active_id = g.ActiveIdIsAlive;
+if (ImGui::GetIO().MouseDown[0]){
+   AddToConsole(console_main, "ID: 0x%08X , GImGui->ActiveId: 0x%08X",ImGui::GetID("Scene"), active_id);
+}
+    ImGui::End();
+*/
      ImGui::ShowStackToolWindow(&popen); 
 
 

@@ -1146,16 +1146,62 @@ void rive_cleanup()
 }
 
 
+/*
+extern "C" void rive_moveGetClicked(ImGuiIO& io){
+ImGuiContext& g = *GImGui;
+    if (g.ActiveId != 0 || g.HoveredId != 0)
+        return;
+
+    // Unless we just made a window/popup appear
+    if (g.NavWindow && g.NavWindow->Appearing)
+        return;
+
+    // Click on empty space to focus window and start moving
+    // (after we're done with all our widgets, so e.g. clicking on docking tab-bar which have set HoveredId already and not get us here!)
+    if (io.MouseClicked[0])
+    {
+        // Handle the edge case of a popup being closed while clicking in its empty space.
+        // If we try to focus it, FocusWindow() > ClosePopupsOverWindow() will accidentally close any parent popups because they are not linked together any more.
+        ImGuiWindow* root_window = g.HoveredWindow ? g.HoveredWindow->RootWindow : NULL;
+        const bool is_closed_popup = root_window && (root_window->Flags & ImGuiWindowFlags_Popup) && !IsPopupOpen(root_window->PopupId, ImGuiPopupFlags_AnyPopupLevel);
+
+        if (root_window != NULL && !is_closed_popup)
+        {
+            StartMouseMovingWindow(g.HoveredWindow); //-V595
+
+            // Cancel moving if clicked outside of title bar
+            if (io.ConfigWindowsMoveFromTitleBarOnly)
+                if (!(root_window->Flags & ImGuiWindowFlags_NoTitleBar) || root_window->DockIsActive)
+                    if (!root_window->TitleBarRect().Contains(io.MouseClickedPos[0]))
+                        g.MovingWindow = NULL;
+
+            // Cancel moving if clicked over an item which was disabled or inhibited by popups (note that we know HoveredId == 0 already)
+            if (g.HoveredIdDisabled)
+                g.MovingWindow = NULL;
+        }
+        else if (root_window == NULL && g.NavWindow != NULL && GetTopMostPopupModal() == NULL)
+        {
+            // Clicking on void disable focus
+            FocusWindow(NULL);
+        }
+    }*/
+
+
 extern "C" void rive_moveCamera(ImGuiIO& io){
 
 	io.DisplaySize = ImVec2(float(sapp_width()), float(sapp_height()));
 	
     static float mouseLastX         = 0.0f;
     static float mouseLastY         = 0.0f;
+
 	if (io.WantCaptureMouse){
         
 		g_app.m_Camera.m_Zoom -= io.MouseWheel*3.0;
       
+
+   // ImGuiContext& g = *GImGui;
+    //g.ActiveIdIsJustActivated = (g.ActiveId != id);
+
 		if (io.MouseDown[0])
 		{
             float zoom = g_app.m_Camera.Zoom();
