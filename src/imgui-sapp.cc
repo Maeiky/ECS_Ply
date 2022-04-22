@@ -307,18 +307,21 @@ void CreateContextWindow(){
 
 
 
-    if(GImGui->ActiveId == ImGui::GetID("Scene")){
+    //if(GImGui->ActiveId == ImGui::GetID("Scene")){
         rive_moveCamera(ImGui::GetIO() );
-    }
+    //}
 
     //draw FBO
    // ImGui::Image((void *)m_frameBufferTextureID, availableSize, ImVec2(0, 1),ImVec2(1, 0));
     ImGui::End();
-/*
+
 if (ImGui::GetIO().MouseDown[0]){
-   AddToConsole(console_main, "ID: 0x%08X , GImGui->ActiveId: 0x%08X",ImGui::GetID("Scene"), GImGui->ActiveId );
+    ImGuiContext* ctx = GImGui;
+    ImGuiContext& g = *ctx;
+        ImGuiWindow* window =  ImGui::FindWindowByName("###Scene");
+   AddToConsole(console_main, "ID: 0x%08X , GImGui->ActiveId: 0x%08X",ImGui::GetID("###Scene"), GImGui->ActiveIdWindow );
 }
-*/
+
 //https://github.com/ocornut/imgui/issues/4430
 }
 
