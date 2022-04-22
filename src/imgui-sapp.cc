@@ -122,7 +122,7 @@ extern "C" void frame_scene();
     ///  ImGuiID dockspace_bot ;
          //  ImGuiID dockspace_right_bot ;
 
-extern "C" void rive_moveCamera(ImGuiIO& io);
+extern "C" void rive_moveCamera(ImGuiIO& io, bool focus);
 
 void CreateDockingSpace(){
 
@@ -314,29 +314,11 @@ if( window->Active){
     //}
 }*/
 
-    //draw FBO
-bool focus = false;
-//ImGuiIO io = ImGui::GetIO();
-if( ImGui::IsWindowFocused() ){
-	
-//ImGuiWindow* window =  ImGui::FindWindowByName("###Scene");
-//if( window != 0  && window->LastFrameJustFocused){
-    //if(GImGui->ActiveId == ImGui::GetID("Scene")){
-       // rive_moveCamera(io);
-    //}
 
-//focus=true;
-//}
-    // 
-}
+    //AddToConsole(console_main, "x:%d, y%d", ImGui::GetIO().MousePos.x , ImGui::GetIO().MousePos.y);
 
-   // ImGui::Image((void *)m_frameBufferTextureID, availableSize, ImVec2(0, 1),ImVec2(1, 0));
+  rive_moveCamera(ImGui::GetIO(), ImGui::IsWindowFocused());
 
-if(focus){
-    AddToConsole(console_main, "x:%d, y%d", ImGui::GetIO().MousePos.x , ImGui::GetIO().MousePos.y);
-
-  rive_moveCamera(ImGui::GetIO() );
-}
 
     ImGui::End();
 

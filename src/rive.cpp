@@ -1187,14 +1187,14 @@ ImGuiContext& g = *GImGui;
     }*/
 
 
-extern "C" void rive_moveCamera(ImGuiIO& io){
+extern "C" void rive_moveCamera(ImGuiIO& io, bool focus){
 
 	io.DisplaySize = ImVec2(float(sapp_width()), float(sapp_height()));
 	
     static float mouseLastX         = io.MousePos.x ;
     static float mouseLastY         = io.MousePos.y;
 
-	if (io.WantCaptureMouse){
+	if (io.WantCaptureMouse && focus){
         
 		g_app.m_Camera.m_Zoom -= io.MouseWheel*3.0;
       
