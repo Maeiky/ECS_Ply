@@ -451,8 +451,8 @@ SMIBool* StateMachineInstance::getBool(std::string name) const
 }
 */
 //Test
-static void StateMachineGetInstance(rive::StateMachine* machine) {
-if(machine == 0){return;}
+static rive::StateMachineInstance*  StateMachineGetInstance(rive::StateMachine* machine) {
+if(machine == 0){return nullptr;}
 
 rive::StateMachineInstance*  stateMachineInstance = new rive::StateMachineInstance(machine);
 
@@ -473,7 +473,9 @@ rive::StateMachineInstance*  stateMachineInstance = new rive::StateMachineInstan
 			case rive::StateMachineNumber::typeKey:{
 
                  rive::SMINumber* in =  stateMachineInstance->getNumber(input->name());
-                in->value(50);   
+                   //AddToConsole(console_main, input->name().c_str());
+static int i = 0;i++;
+                in->value(i);   
                 }break;
 			case rive::StateMachineTrigger::typeKey:{
 
@@ -494,6 +496,7 @@ rive::StateMachineInstance*  stateMachineInstance = new rive::StateMachineInstan
        // rive::StateMachineLayerInstance* machine->layer(i);
         //do something
 	}
+    return stateMachineInstance;
 }
 
 
@@ -526,15 +529,17 @@ void AppUpdateRive(float dt, uint32_t width, uint32_t height)
                rive::AABB(x - width/2, y - height/2 , artboardBounds.width(), artboardBounds.height()),
                artboardBounds);
 
-            if (animation)
-            {
-                animation->advance(dt);
-               animation->apply(artboard, 1);
-            }
-
- rive::StateMachine* state= artboard->firstStateMachine();
- StateMachineGetInstance(state);
+ rive::StateMachine* state_machine= artboard->firstStateMachine();
+ rive::StateMachineInstance* state_machine_inst = StateMachineGetInstance(state_machine);
  
+           if (state_machine_inst != nullptr){
+				state_machine_inst->advance(artboard, dt);
+			}
+            if (animation){
+              animation->advance(dt);
+              animation->apply(artboard, 1);
+            } 
+
             artboard->advance(dt);
             artboard->draw(renderer);
             renderer->restore();
