@@ -6630,6 +6630,13 @@ struct ExampleAppConsole
         Items.push_back(Strdup(buf));
     }
 
+
+    void   Print(const char* txt) 
+    {
+        Items.push_back(Strdup(txt));
+    }
+
+
     void    Draw(const char* title, bool* p_open)
     {
         ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
@@ -6727,6 +6734,7 @@ struct ExampleAppConsole
             ImVec4 color;
             bool has_color = false;
             if (strstr(item, "[error]"))          { color = ImVec4(1.0f, 0.4f, 0.4f, 1.0f); has_color = true; }
+            else if (strncmp(item, "I>", 2) == 0) { color = ImVec4(1.0f, 0.0f, 1.0f, 0.8f); has_color = true; }
             else if (strncmp(item, "# ", 2) == 0) { color = ImVec4(1.0f, 0.8f, 0.6f, 1.0f); has_color = true; }
             else{
                 color = ImVec4(1.0f, 0.8f, 0.6f, 1.0f); has_color = true;
@@ -6930,12 +6938,9 @@ struct ExampleAppConsole
     return &console;
 }
 
-
-extern "C" void AddToConsole(ExampleAppConsole* cls, const char* format, ...){
-    va_list _arg_;va_start (_arg_, format);
-    cls->AddLog(format, _arg_);
+extern "C" void AddToConsole(ExampleAppConsole* cls, const char* txt){
+    cls->Print( txt);
 }
-
 
 
 //-----------------------------------------------------------------------------

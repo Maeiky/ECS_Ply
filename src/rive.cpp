@@ -152,7 +152,7 @@ static bool LoadFileFromPath(const char* path, uint8_t** bytesOut, size_t* bytes
     FILE* fp = fopen(path, "rb");
     if (fp == 0)
     {
-        fprintf(stderr, "Failed to open file from '%s'\n", path);
+        err_print("Failed to open file from '%s'", path);
         return false;
     }
 
@@ -165,7 +165,7 @@ static bool LoadFileFromPath(const char* path, uint8_t** bytesOut, size_t* bytes
     if (bytesRead != fileBytesLength)
     {
         delete[] fileBytes;
-        fprintf(stderr, "Failed to read file from '%s' bytes read %zu, expected %zu\n", path, bytesRead, fileBytesLength);
+        err_print( "Failed to read file from '%s' bytes read %zu, expected %zu", path, bytesRead, fileBytesLength);
         return false;
     }
 
@@ -234,7 +234,7 @@ static void UpdateArtboardCloneCount(App::ArtboardContext& ctx)
 
 static void AddArtboardFromPath(const char* path)
 {
-    AddToConsole(console_main, path);
+    //_print("%s", path);
     App::ArtboardContext* ctx = 0;
 
     for (int i = 0; i < App::MAX_ARTBOARD_CONTEXTS; ++i)
@@ -278,9 +278,7 @@ static void AddArtboardFromPath(const char* path)
             ctx->m_Artboards.SetCapacity(1);
             ctx->m_Artboards.Push(data);
 
-         //   _printf("Added artboard from '%s'\n", path);
-            err_print("Test: %s", path);
-            err_print("Test: %s", path);
+            info_print("Added artboard: %s", path);
 
         }
     }

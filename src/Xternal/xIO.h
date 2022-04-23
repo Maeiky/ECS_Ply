@@ -49,13 +49,13 @@
 		#define err_print(...) err_printf(_CR_"E: " __VA_ARGS__);
 	#endif
 	
-	#define _print(...)  		_printf(_CR_ __VA_ARGS__);
-	#define dbg_print(...)  	dbg_printf(_CR_ __VA_ARGS__);
-	#define warn_print(...)    _printf(_CR_"W: " __VA_ARGS__);
-	#define pass_print(...)    _printf(_CR_"P: " __VA_ARGS__);
-	#define info_print(...)    _printf(_CR_"I: " __VA_ARGS__);
-	#define trace_print(...)   _printf(_CR_"T: " __VA_ARGS__);
-	#define log_print(...)     _printf(_CR_"L: " __VA_ARGS__);
-	#define action_print(...)  _printf(_CR_"A: " __VA_ARGS__);
+	#define _print(...)  		_printf(_CR_"O> " __VA_ARGS__);
+	#define dbg_print(...)  	dbg_printf(_CR_"D> "  __VA_ARGS__);
+	#define warn_print(...)    _printf(_CR_"W> " __VA_ARGS__);
+	#define pass_print(...)    _printf(_CR_"P> " __VA_ARGS__);
+	#define info_print(...)    _printf(_CR_"I> " __VA_ARGS__);
+	#define trace_print(...)   _printf(_CR_"T> " __VA_ARGS__);
+	#define log_print(...)     _printf(_CR_"L> " __VA_ARGS__);
+	#define action_print(...)  _printf(_CR_"A> " __VA_ARGS__);
 	
 #endif
