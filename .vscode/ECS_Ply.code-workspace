@@ -31,7 +31,8 @@
 			"xstring": "cpp",
 			"iosfwd": "cpp",
 			"optional": "cpp",
-			"xlocinfo": "cpp"
+			"xlocinfo": "cpp",
+			"*.inc": "cpp"
 		}
 	}
 }

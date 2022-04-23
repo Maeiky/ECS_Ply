@@ -27,9 +27,8 @@
 #include "rive/rive_render_api.h"
 #include "rive.glsl.h"
 
-struct ExampleAppConsole;
-extern ExampleAppConsole*  console_main;
-extern "C" void AddToConsole(ExampleAppConsole* cls, const char* format, ...);
+#include "Global.h"
+
 
 
 #ifdef SOKOL_GLCORE33
@@ -249,7 +248,7 @@ static void AddArtboardFromPath(const char* path)
 
     if (ctx == 0)
     {
-        printf("Can't add more artboards");
+        err_print("Can't add more artboards");
         return;
     }
 
@@ -279,7 +278,10 @@ static void AddArtboardFromPath(const char* path)
             ctx->m_Artboards.SetCapacity(1);
             ctx->m_Artboards.Push(data);
 
-            printf("Added artboard from '%s'\n", path);
+         //   _printf("Added artboard from '%s'\n", path);
+            err_print("Test: %s", path);
+            err_print("Test: %s", path);
+
         }
     }
 }
@@ -1922,7 +1924,7 @@ sapp_desc sokol_main(int argc, char* argv[]) {
 void add_assets(void){
 	///// Add some assets
     AddArtboardFromPath("Rc/tree.riv");
-    
+    AddArtboardFromPath("Rc/bird.riv");
 	AddArtboardFromPath("Rc/runner.riv");
     AddArtboardFromPath("Rc/juice.riv");
     AddArtboardFromPath("Rc/marty.riv");
