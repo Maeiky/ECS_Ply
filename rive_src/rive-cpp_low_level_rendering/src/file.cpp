@@ -100,10 +100,10 @@ static Core* readRuntimeObject(BinaryReader& reader,
 	}
 	if (object == nullptr)
 	{
-		// fprintf(stderr,
-		//         "File contains an unknown object with coreType " RIVE_FMT_U64 ", which "
-		//         "this runtime doesn't understand.\n",
-		//         coreObjectKey);
+		 fprintf(stderr,
+		         "File contains an unknown object with coreType " RIVE_FMT_U64 ", which "
+		        "this runtime doesn't understand.\n",
+		         coreObjectKey);
 		return nullptr;
 	}
 	return object;

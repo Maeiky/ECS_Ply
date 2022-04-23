@@ -1844,8 +1844,11 @@ sapp_desc sokol_main(int argc, char* argv[]) {
 
 void add_assets(void){
 	///// Add some assets
-    AddArtboardFromPath("Rc/tree.riv");
+
     AddArtboardFromPath("Rc/bird.riv");
+	
+	return;
+	   AddArtboardFromPath("Rc/tree.riv");
 	AddArtboardFromPath("Rc/runner.riv");
     AddArtboardFromPath("Rc/juice.riv");
     AddArtboardFromPath("Rc/marty.riv");
