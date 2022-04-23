@@ -7,6 +7,7 @@
 -{pSokol}={pExtLib}/sokol/
 -{pData}={p_sapp}data/
 -{pRc}=../Rc/
+-{pRive_srt}=../rive_src/
 >
 -{vExIncl}=
 -I {pExtLib}imgui/
@@ -53,5 +54,5 @@ shdc --input {pSrc}/rive.glsl --output {pSrc}/rive.glsl.h --slang glsl330:glsl10
 -o {pObj} -#To {pOut}{sName}.* -{vLink} 
 -{vOS_FlagLink}
 -{vPreloadRc}
--L {pExtLib}rive/{sFolder}/ -lrive
+-L {pRive_srt}cwc/Lib/{sFolder}/ -lrive
 >

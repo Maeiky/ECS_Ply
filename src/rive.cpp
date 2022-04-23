@@ -184,6 +184,7 @@ rive::Artboard* LoadArtboardFromData(uint8_t* data, size_t dataLength)
 
     if (result != rive::ImportResult::success)
     {
+        err_print("!rive::ImportResult::success");
         return 0;
     }
 
@@ -232,7 +233,7 @@ static void UpdateArtboardCloneCount(App::ArtboardContext& ctx)
 }
 
 
-static void AddArtboardFromPath(const char* path)
+static bool AddArtboardFromPath(const char* path)
 {
     //_print("%s", path);
     App::ArtboardContext* ctx = 0;
@@ -249,7 +250,7 @@ static void AddArtboardFromPath(const char* path)
     if (ctx == 0)
     {
         err_print("Can't add more artboards");
-        return;
+        return false;
     }
 
     uint8_t* bytes = 0;
@@ -279,9 +280,11 @@ static void AddArtboardFromPath(const char* path)
             ctx->m_Artboards.Push(data);
 
             info_print("Added artboard: %s", path);
-
+            return true;
         }
     }
+     err_print("Error loading %s", path);
+     return false;
 }
 
 static void ReloadArtboardContext(App::ArtboardContext* ctx)
@@ -627,8 +630,7 @@ gbl_artboard = artboard;
 						number->value(v);
 						ImGui::NextColumn();
 					}
-					else if (inputInstance->input()
-					             ->is<rive::StateMachineTrigger>())
+					else if (inputInstance->input()->is<rive::StateMachineTrigger>())
 					{
 						// ImGui requires names as id's, use ## to hide the
 						// label but still give it an id.
@@ -642,8 +644,7 @@ gbl_artboard = artboard;
 						}
 						ImGui::NextColumn();
 					}
-					else if (inputInstance->input()
-					             ->is<rive::StateMachineBool>())
+					else if (inputInstance->input()->is<rive::StateMachineBool>())
 					{
 						// ImGui requires names as id's, use ## to hide the
 						// label but still give it an id.
@@ -673,28 +674,10 @@ gbl_artboard = artboard;
 ///////////////////////////////
 ///////////////////////////////
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
     }
 
     /////////////////
-
-
 
 ///////
 }
@@ -716,67 +699,7 @@ static void FillPaintData(rive::HRenderPaint paint, fs_paint_t& uniform)
     uniform.gradientStop[0]  = paintData.m_GradientLimits[2];
     uniform.gradientStop[1]  = paintData.m_GradientLimits[3];
 }
-/*
-// Adapted from https://github.com/floooh/sokol-samples/blob/master/glfw/imgui-glfw.cc
-static void AppDrawImgui(ImDrawData* drawData)
-{
-    assert(drawData);
-    if (drawData->CmdListsCount == 0)
-    {
-        return;
-    }
 
-    sg_bindings bind       = {};
-    bind.vertex_buffers[0] = g_app.m_ImguiVxBuffer;
-    bind.index_buffer      = g_app.m_ImguiIxBuffer;
-    bind.fs_images[0]      = g_app.m_ImguiFontImage;
-
-    // render the command list
-    sg_apply_pipeline(g_app.m_ImguiPipeline);
-    vs_imgui_params_t vs_params;
-	//#ifdef HasImGUI_IO
-    vs_params.x = ImGui::GetIO().DisplaySize.x;
-    vs_params.y = ImGui::GetIO().DisplaySize.y;
-	//#endif
-    sg_apply_uniforms(SG_SHADERSTAGE_VS, 0, SG_RANGE(vs_params));
-    for (int cl_index = 0; cl_index < drawData->CmdListsCount; cl_index++)
-    {
-        const ImDrawList* cl = drawData->CmdLists[cl_index];
-
-        // append vertices and indices to buffers, record start offsets in resource binding struct
-        const uint32_t vtx_size  = cl->VtxBuffer.size() * sizeof(ImDrawVert);
-        const uint32_t idx_size  = cl->IdxBuffer.size() * sizeof(ImDrawIdx);
-        const uint32_t vb_offset = sg_append_buffer(bind.vertex_buffers[0], { &cl->VtxBuffer.front(), vtx_size });
-        const uint32_t ib_offset = sg_append_buffer(bind.index_buffer, { &cl->IdxBuffer.front(), idx_size });
-
-        if (sg_query_buffer_overflow(bind.vertex_buffers[0]) ||
-            sg_query_buffer_overflow(bind.index_buffer))
-        {
-            continue;
-        }
-
-        bind.vertex_buffer_offsets[0] = vb_offset;
-        bind.index_buffer_offset = ib_offset;
-        sg_apply_bindings(&bind);
-
-        int base_element = 0;
-        for (const ImDrawCmd& pcmd : cl->CmdBuffer) {
-            if (pcmd.UserCallback) {
-                pcmd.UserCallback(cl, &pcmd);
-            }
-            else {
-                const int scissor_x = (int) (pcmd.ClipRect.x);
-                const int scissor_y = (int) (pcmd.ClipRect.y);
-                const int scissor_w = (int) (pcmd.ClipRect.z - pcmd.ClipRect.x);
-                const int scissor_h = (int) (pcmd.ClipRect.w - pcmd.ClipRect.y);
-                sg_apply_scissor_rect(scissor_x, scissor_y, scissor_w, scissor_h, true);
-                sg_draw(base_element, pcmd.ElemCount, 1);
-            }
-            base_element += pcmd.ElemCount;
-        }
-    }
-}
-*/
 #define IS_BUFFER_VALID(b) (b != 0 && b->m_Handle.id != SG_INVALID_ID)
 
 static inline void GetCameraMatrix(mat4x4 M, uint32_t width, uint32_t height)

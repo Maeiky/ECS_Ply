@@ -43,10 +43,10 @@
 	fn int _printf(const char *_format, ...);
 	
 	#ifdef NO_ERR_PRINTF
-		#define err_print(...) _printf(_CR_"E: " __VA_ARGS__);
+		#define err_print(...) _printf(_CR_"E> " __VA_ARGS__);
 	#else
 		fn int err_printf(const char *_format, ...);
-		#define err_print(...) err_printf(_CR_"E: " __VA_ARGS__);
+		#define err_print(...) err_printf(_CR_"E> " __VA_ARGS__);
 	#endif
 	
 	#define _print(...)  		_printf(_CR_"O> " __VA_ARGS__);
