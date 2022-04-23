@@ -539,24 +539,7 @@ void AppUpdateRive(float dt, uint32_t width, uint32_t height)
  rive::StateMachineInstance* state_machine_inst = StateMachineGetInstance(state_machine);
  
          
-            if (animation){
-              animation->advance(dt);
-              animation->apply(artboard, 1);
-            } 
-            if (state_machine_inst != nullptr){
-				state_machine_inst->advance(artboard, dt);
-			}
-
-
-            artboard->advance(dt);
-            artboard->draw(renderer);
-            renderer->restore();
-
-            if (j == (numArtboards-1))
-            {
-                y += artboardBounds.height();
-            }
-
+        
 
 
 
@@ -589,6 +572,12 @@ gbl_artboard = artboard;
 			        4))
 			{
 				stateMachineIndex = -1;
+ rive::LinearAnimation* animation = artboard->animation(animationIndex);
+if (animation != nullptr)
+{
+  rive::LinearAnimationInstance*  animationInstance = new rive::LinearAnimationInstance(animation);
+}
+
 				//initAnimation(animationIndex);
 			}
 			if (ImGui::ListBox(
@@ -604,6 +593,14 @@ gbl_artboard = artboard;
 			        4))
 			{
 				animationIndex = -1;
+//auto stateMachine =  artboard->stateMachine(stateMachineIndex);
+
+state_machine=  artboard->stateMachine(stateMachineIndex);
+if (state_machine != nullptr)
+{
+    state_machine_inst = new rive::StateMachineInstance(state_machine);
+}
+
 				//initStateMachine(stateMachineIndex);
 			}
 			if (state_machine_inst != nullptr)
@@ -673,6 +670,27 @@ gbl_artboard = artboard;
 ///////////////////////////////
 ///////////////////////////////
 ///////////////////////////////
+         if (animation){
+              animation->advance(dt);
+              animation->apply(artboard, 1);
+            } 
+            if (state_machine_inst != nullptr){
+				state_machine_inst->advance(artboard, dt);
+			}
+
+
+            artboard->advance(dt);
+            artboard->draw(renderer);
+            renderer->restore();
+
+            if (j == (numArtboards-1))
+            {
+                y += artboardBounds.height();
+            }
+
+
+
+
 
         }
     }
@@ -1847,7 +1865,7 @@ void add_assets(void){
 
     AddArtboardFromPath("Rc/bird.riv");
 	
-	return;
+	//return;
 	   AddArtboardFromPath("Rc/tree.riv");
 	AddArtboardFromPath("Rc/runner.riv");
     AddArtboardFromPath("Rc/juice.riv");
