@@ -14,10 +14,6 @@
 	fn int _printf(const char *_format, ...);
 #endif
 
-#ifndef fn
-#define DbgIn_ImGUI
-#endif
-
 #ifndef _CR_
 	#ifdef DbgIn_ImGUI
 		#define _CR_ ""

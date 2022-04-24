@@ -30,10 +30,12 @@
 -I {p3p}nanosvg/src/
 ;-I {p3p}Freetype/
 >
+-{vFlag}=-DDbgIn_ImGUI
+>
 ;Build Engine
 -c {pRive}/src/  -o obj/{sOut}/lib/rive/ -std=c++2a
 -{vIncl}
--{vOS_Flag}
+-{vOS_Flag} -{vFlag}
 -D_USE_MATH_DEFINES
 -DLOW_LEVEL_RENDERING
 -DCONTOUR_RECURSIVE
@@ -44,11 +46,11 @@ shdc --input {pRiveSokol}/shaders.glsl --output {pRiveSokol}/shaders.glsl.h --sl
 ;Build rive sokol
 -c {pRiveSokol}rive/ -o obj/{sOut}/lib/rive_sokol/
 -{vIncl}
--{vOS_Flag}
+-{vOS_Flag} -{vFlag}
 >
 ;Build libtess2
 -c {p3p}libtess/Source/ -o obj/{sOut}/lib/libtess/
--{vIncl} -{vOS_Flag} -{vInclEx}
+-{vIncl} -{vOS_Flag} -{vFlag} -{vInclEx}
 >
 ;Generate Dynamic Lib
 ;-o obj/{sOut}/lib/ -#To Lib/{sOut}/rive.{_sDynamic}
@@ -58,20 +60,20 @@ shdc --input {pRiveSokol}/shaders.glsl --output {pRiveSokol}/shaders.glsl.h --sl
 >
 ;Build stb
 -c {p3p}stb/ -o obj/{sOut}/stb/
--{vIncl} -{vOS_Flag} -{vInclEx}
+-{vIncl} -{vOS_Flag} -{vFlag} -{vInclEx}
 >
 ;Build imgui
 -c &{p3p}imgui/ -o obj/{sOut}/imgui/
--{vIncl} -{vOS_Flag} -{vInclEx}
+-{vIncl} -{vOS_Flag} -{vFlag} -{vInclEx}
 >
 ;Build sokol
 -c {p3p}sokol/ -o obj/{sOut}/sokol/
--{vIncl} -{vOS_Flag} -{vInclEx} -DSOKOL_GLCORE33
+-{vIncl} -{vOS_Flag} -{vFlag} -{vInclEx} -DSOKOL_GLCORE33
 >
 ;Build an Example
 -c &{pRiveSokol} -o obj/{sOut}/
 -{vIncl}
--{vOS_Flag}
+-{vOS_Flag} -{vFlag}
 >
 -#Copy {pRc} {pOut}Rc/
 >

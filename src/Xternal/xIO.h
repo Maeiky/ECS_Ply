@@ -18,7 +18,6 @@
 
 #include "Xternal/Types.h"
 
-#define DbgIn_ImGUI
 #ifdef DbgIn_ImGUI
 	#define NO_ERR_PRINTF
 	typedef struct ExampleAppConsole ExampleAppConsole;

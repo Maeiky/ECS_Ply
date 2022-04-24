@@ -23,7 +23,7 @@
 -{vIncl}=-I {pSokol} -I {p_sapp} -I {pSrc} -I {pSokol}util/ -I {pExtLib}
 ;-DSOKOL_WGPU //Already defined
 >
--{vFlag}=""
+-{vFlag}=-DDbgIn_ImGUI
 >
 ;Build main Shader
 shdc --input {pSrc}/MainShader.glsl --output {pSrc}/MainShader.glsl.h --slang glsl330:glsl100:glsl300es
