@@ -7,6 +7,22 @@
 #define HasImGUI
 #endif
 
+///[Redirect fprintf errors]///
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h> //va_list //va_start //va_end
+fn int _printf(const char*_format, ...){
+	 va_list _arg;
+	 va_start( _arg, _format );
+	 
+	  int _ret = vprintf(  _format, _arg );
+	  va_end( _arg );
+	  
+	  fflush(stdout);
+	  return _ret;
+}
+////////////////////////////
+
 #include "sokol_app.h"
 #include "sokol_gfx.h"
 #include "sokol_glue.h"

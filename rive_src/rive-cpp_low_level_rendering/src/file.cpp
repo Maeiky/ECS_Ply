@@ -26,7 +26,7 @@
 using namespace rive;
 
 #if !defined(RIVE_FMT_U64)
-	#if defined(__ANDROID__)
+	//#if defined(__ANDROID__)
 		#if INTPTR_MAX == INT64_MAX
 			#define RIVE_FMT_U64 "%lu"
 			#define RIVE_FMT_I64 "%ld"
@@ -34,11 +34,13 @@ using namespace rive;
 			#define RIVE_FMT_U64 "%llu"
 			#define RIVE_FMT_I64 "%lld"
 		#endif
+		/*
 	#else
 		#include <inttypes.h>
 		#define RIVE_FMT_U64 "%" PRIu64
 		#define RIVE_FMT_I64 "%" PRId64
 	#endif
+	*/
 #endif
 
 // Import a single Rive runtime object.
@@ -101,7 +103,7 @@ static Core* readRuntimeObject(BinaryReader& reader,
 	if (object == nullptr)
 	{
 		 fprintf(stderr,
-		         "File contains an unknown object with coreType " /* RIVE_FMT_U64*/ ", which "
+		         "File contains an unknown object with coreType "  RIVE_FMT_U64 ", which "
 		        "this runtime doesn't understand.\n",
 		         coreObjectKey);
 		return nullptr;

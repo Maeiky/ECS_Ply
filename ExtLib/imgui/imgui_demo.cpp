@@ -6734,8 +6734,8 @@ struct ExampleAppConsole
             ImVec4 color;
             bool has_color = false;
             if (strstr(item, "[error]"))          { color = ImVec4(1.0f, 0.4f, 0.4f, 1.0f); has_color = true; }
-            else if (strncmp(item, "I>", 2) == 0) { color = ImVec4(1.0f, 0.0f, 1.0f, 0.8f); has_color = true; }
-            else if (strncmp(item, "E>", 2) == 0) { color = ImVec4(1.0f, 0.1f, 0.1f, 1.0f); has_color = true; }
+            else if (strncmp(item, "I", 1) == 0) { color = ImVec4(1.0f, 0.0f, 1.0f, 0.8f); has_color = true; }
+            else if (strncmp(item, "E", 1) == 0) { color = ImVec4(1.0f, 0.1f, 0.1f, 1.0f); has_color = true; }
             else if (strncmp(item, "# ", 2) == 0) { color = ImVec4(1.0f, 0.8f, 0.6f, 1.0f); has_color = true; }
             else{
                 color = ImVec4(1.0f, 0.8f, 0.6f, 1.0f); has_color = true;
