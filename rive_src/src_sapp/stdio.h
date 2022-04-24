@@ -5,18 +5,25 @@
 #include <../include/stdio.h>
 #endif
 
-#ifdef __cplusplus
-#define fn extern "C" 	 
-#else
-#define fn 	  
+#ifndef fn
+	#ifdef __cplusplus
+	#define fn extern "C" 	 
+	#else
+	#define fn 	  
+	#endif
+	fn int _printf(const char *_format, ...);
 #endif
-fn int _printf(const char *_format, ...);
-//FILE *stream
+
+#ifndef fn
 #define DbgIn_ImGUI
-#ifdef DbgIn_ImGUI
-	#define _CR_ ""
-#else
-	#define _CR_ "\n"
+#endif
+
+#ifndef _CR_
+	#ifdef DbgIn_ImGUI
+		#define _CR_ ""
+	#else
+		#define _CR_ "\n"
+	#endif
 #endif
 
 #define STRINGIZE(x) STRINGIZE2(x)
@@ -28,4 +35,5 @@ fn int _printf(const char *_format, ...);
 #else
 #define fprintf(FileStream, ...)  _printf(_CR_"E[Rive]> " __VA_ARGS__);
 #endif
+
 ///////////////////////////////////

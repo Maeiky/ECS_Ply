@@ -24,9 +24,14 @@
 	typedef struct ExampleAppConsole ExampleAppConsole;
 	extern ExampleAppConsole*  console_main;
 	fn void AddToConsole(ExampleAppConsole* cls, const char* format, ...);
+	#ifndef _CR_
 	#define _CR_ ""
+	#endif
+	
 #else
+	#ifndef _CR_
 	#define _CR_ "\n"
+	#endif
 #endif
 
 	fn void _Sleep(uint32_t _nMillisecond);

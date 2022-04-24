@@ -29,13 +29,14 @@
 #define  CallType_Std 	__stdcall
 #endif
 
-
-#ifdef __cplusplus
-#define fn extern "C" 	CallType_C 
-#define func_std extern "C" CallType_Std 
-#else
-#define fn 	 CallType_C 
-#define func_std CallType_Std 
+#ifndef fn
+	#ifdef __cplusplus
+	#define fn extern "C" 	CallType_C 
+	#define func_std extern "C" CallType_Std 
+	#else
+	#define fn 	 CallType_C 
+	#define func_std CallType_Std 
+	#endif
 #endif
 
 #ifdef D_Dynamic_Export
