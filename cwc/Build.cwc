@@ -5,13 +5,13 @@
 -{pSrc}=../src/
 -{pExtLib}=../ExtLib/
 -{pSokol}={pExtLib}/sokol/
--{pData}={p_sapp}data/
 -{pRc}=../Rc/
 -{pRive_srt}=../rive_src/
+-{p_sapp}={pRive_srt}src_sapp/
 >
 -{vExIncl}=
 -I {pExtLib}imgui/
--I {pExtLib}rive/
+-I {pRive_srt}rive-cpp_low_level_rendering_new/include/
 ;-DSOKOL_VALIDATE_NON_FATAL
 >
 -{sFolder}={_sPlatform}_{_sOpt}_{sToolChainType}

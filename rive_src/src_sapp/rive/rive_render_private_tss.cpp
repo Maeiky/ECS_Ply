@@ -247,4 +247,11 @@ namespace rive
             rp->drawPaint(this, m_Transform, srph);
         }
     }
+	
+	void TessellationRenderer::drawImage(RenderImage* image, BlendMode value, float opacity)
+	{
+		//TODO
+		
+		
+	}
 }

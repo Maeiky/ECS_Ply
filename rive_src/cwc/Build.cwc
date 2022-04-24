@@ -3,7 +3,8 @@
 -{sOut}={_sPlatform}_{_sOpt}_{_sConfig_Type}
 >
 -{p3p}=../third-party/
--{pRive}=../rive-cpp_low_level_rendering/
+;-{pRive}=../rive-cpp_low_level_rendering/
+-{pRive}=../rive-cpp_low_level_rendering_new/
 ;-{pRiveSokol}=../src_glfw/
 -{pRiveSokol}=../src_sapp/
 -{pTess}={p3p}libtess/

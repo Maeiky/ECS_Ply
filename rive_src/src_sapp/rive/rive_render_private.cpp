@@ -16,6 +16,13 @@ namespace rive
     // Misc / Utility functions
     ////////////////////////////////////////////////////////
 
+	RenderImage* makeRenderImage(){
+		//return new OpenGLRenderImage();
+		_printf("makeRenderImage");
+		return 0;
+	}
+	
+
     static void getColorArrayFromUint(unsigned int colorIn, float* rgbaOut)
     {
         rgbaOut[0] = (float)((0x00ff0000 & colorIn) >> 16) / 255.0f;

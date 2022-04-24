@@ -13,6 +13,7 @@
 #include <rive/animation/linear_animation_instance.hpp>
 #include <rive/animation/state_machine_input_instance.hpp>
 
+#include "rive/relative_local_asset_resolver.hpp"
 #include "rive/animation/state_machine_instance.hpp"
 #include "rive/animation/state_machine_input.hpp"
 #include "rive/animation/state_machine_bool.hpp"
@@ -178,9 +179,14 @@ static bool LoadFileFromPath(const char* path, uint8_t** bytesOut, size_t* bytes
 
 rive::Artboard* LoadArtboardFromData(uint8_t* data, size_t dataLength)
 {
+
+   // std::string filename = "../test/assets/out_of_band/walle.riv";
+    std::string filename = "";
+	rive::RelativeLocalAssetResolver resolver(filename);
+
     rive::File* file    = 0;
     rive::BinaryReader reader = rive::BinaryReader(data, dataLength);
-    rive::ImportResult result = rive::File::import(reader, &file);
+    rive::ImportResult result = rive::File::import(reader, &file, &resolver);
 
     if (result != rive::ImportResult::success)
     {
@@ -1863,7 +1869,7 @@ sapp_desc sokol_main(int argc, char* argv[]) {
 void add_assets(void){
 	///// Add some assets
 
-    AddArtboardFromPath("Rc/bird.riv");
+  //  AddArtboardFromPath("Rc/bird.riv");
 	
 	//return;
 	   AddArtboardFromPath("Rc/tree.riv");

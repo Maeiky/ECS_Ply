@@ -155,7 +155,14 @@ namespace rive
         p->stencil(this, m_Transform, 0, p->fillRule() == FillRule::evenOdd, m_IsClipping);
         rp->drawPaint(this, m_Transform, srph);
     }
-
+	
+	void StencilToCoverRenderer::drawImage(RenderImage* image, BlendMode value, float opacity)
+	{
+		//TODO
+		
+		
+	}
+       
     ////////////////////////////////////////////////////////
     // Stencil To Cover - RenderPath
     ////////////////////////////////////////////////////////
