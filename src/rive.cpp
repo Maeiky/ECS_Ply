@@ -64,6 +64,7 @@ static struct App
     {
         rive::Artboard*                m_Artboard;
         rive::LinearAnimationInstance* m_AnimationInstance;
+        rive::StateMachineInstance* m_StateMachineInstance;
         const char* m_file;
     };
 
@@ -510,6 +511,43 @@ static int i = 0;i++;
     return stateMachineInstance;
 }
 
+rive::LinearAnimationInstance* initAnimation(rive::Artboard* artboard, int index) //Or inistate_machine
+{
+///delete artboard; ??
+//delete animationInstance;??
+//delete stateMachineInstance;?? Reassing?
+	artboard->advance(0.0f);
+	
+	auto animation = index >= 0 && index < artboard->animationCount()
+	                     ? artboard->animation(index)
+	                     : nullptr;
+	if (animation != nullptr)
+	{
+		rive::LinearAnimationInstance* animationInstance = new rive::LinearAnimationInstance(animation);
+		return animationInstance;
+	}
+	return nullptr;
+}
+
+
+ rive::StateMachineInstance* initStateMachine(rive::Artboard* artboard, int index)//Or ini_animation
+{
+///delete artboard; ??
+//delete animationInstance;??
+//delete stateMachineInstance;?? Reassing?
+	artboard->advance(0.0f);
+
+	auto stateMachine = index >= 0 && index < artboard->stateMachineCount()
+	                        ? artboard->stateMachine(index)
+	                        : nullptr;
+							
+	if (stateMachine != nullptr){
+		rive::StateMachineInstance* state_machine_inst = StateMachineGetInstance(stateMachine);
+		return state_machine_inst;
+	}
+	return nullptr;
+}
+
 
 
 rive::Artboard* gbl_artboard;
@@ -524,15 +562,15 @@ void AppUpdateRive(float dt, uint32_t width, uint32_t height)
     float x = 0.0f;
     for (int i = 0; i < App::MAX_ARTBOARD_CONTEXTS; ++i)
     {
-        const App::ArtboardContext& ctx = g_app.m_ArtboardContexts[i];
-        const int numArtboards          = (int)ctx.m_Artboards.Size();
+         App::ArtboardContext& ctx = g_app.m_ArtboardContexts[i];
+         int numArtboards          = (int)ctx.m_Artboards.Size();
 
         for (int j = 0; j < numArtboards; ++j)
         {
             renderer->save();
-            const App::ArtboardData& data            = ctx.m_Artboards[j];
+            App::ArtboardData& data            = ctx.m_Artboards[j];
             rive::Artboard* artboard                 = data.m_Artboard;
-            rive::LinearAnimationInstance* animation = data.m_AnimationInstance;
+           // rive::LinearAnimationInstance* animation = data.m_AnimationInstance;
             rive::AABB artboardBounds                = artboard->bounds();
             x = artboardBounds.width() * j;
 
@@ -541,13 +579,19 @@ void AppUpdateRive(float dt, uint32_t width, uint32_t height)
                rive::AABB(x - width/2, y - height/2 , artboardBounds.width(), artboardBounds.height()),
                artboardBounds);
 
- rive::StateMachine* state_machine= artboard->firstStateMachine();
- rive::StateMachineInstance* state_machine_inst = StateMachineGetInstance(state_machine);
+
+
+/*
+initAnimation(artboard, 0); //First loading?
+initStateMachine(artboard, 0); //OR  rive::StateMachine* state_machine= artboard->firstStateMachine();??
+*/
+
+
+ //rive::StateMachine* state_machine= artboard->firstStateMachine();
+// rive::StateMachineInstance* state_machine_inst = StateMachineGetInstance(state_machine);
  
          
         
-
-
 
 
 ///////////////////////////////
@@ -578,11 +622,11 @@ gbl_artboard = artboard;
 			        4))
 			{
 				stateMachineIndex = -1;
- rive::LinearAnimation* animation = artboard->animation(animationIndex);
-if (animation != nullptr)
-{
-  rive::LinearAnimationInstance*  animationInstance = new rive::LinearAnimationInstance(animation);
-}
+				
+//data.m_AnimationInstance = artboard->animation(animationIndex);
+
+  data.m_AnimationInstance= initAnimation(artboard, animationIndex);
+
 
 				//initAnimation(animationIndex);
 			}
@@ -601,23 +645,25 @@ if (animation != nullptr)
 				animationIndex = -1;
 //auto stateMachine =  artboard->stateMachine(stateMachineIndex);
 
+data.m_StateMachineInstance = initStateMachine(artboard, stateMachineIndex);
+/*
 state_machine=  artboard->stateMachine(stateMachineIndex);
 if (state_machine != nullptr)
 {
     state_machine_inst = new rive::StateMachineInstance(state_machine);
-}
+}*/
 
 				//initStateMachine(stateMachineIndex);
 			}
-			if (state_machine_inst != nullptr)
+			if (data.m_StateMachineInstance != nullptr)
 			{
 
 				ImGui::Columns(2);
 				ImGui::SetColumnWidth(0, ImGui::GetWindowWidth() * 0.6666);
 
-				for (int i = 0; i < state_machine_inst->inputCount(); i++)
+				for (int i = 0; i < data.m_StateMachineInstance->inputCount(); i++)
 				{
-					auto inputInstance = state_machine_inst->input(i);
+					auto inputInstance = data.m_StateMachineInstance->input(i);
 
 					if (inputInstance->input()->is<rive::StateMachineNumber>())
 					{
@@ -676,16 +722,15 @@ if (state_machine != nullptr)
 ///////////////////////////////
 ///////////////////////////////
 ///////////////////////////////
-         if (animation){
-              animation->advance(dt);
-              animation->apply(artboard, 1);
+			if (data.m_AnimationInstance){
+              data.m_AnimationInstance->advance(dt);
+              data.m_AnimationInstance->apply(artboard, 1);
             } 
-            if (state_machine_inst != nullptr){
-				state_machine_inst->advance(artboard, dt);
+            if (data.m_StateMachineInstance != nullptr){
+				data.m_StateMachineInstance->advance(artboard, dt);
 			}
-
-
             artboard->advance(dt);
+			
             artboard->draw(renderer);
             renderer->restore();
 
