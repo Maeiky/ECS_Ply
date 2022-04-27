@@ -20,9 +20,8 @@
 
 #ifdef DbgIn_ImGUI
 	#define NO_ERR_PRINTF
-	typedef struct ExampleAppConsole ExampleAppConsole;
-	extern ExampleAppConsole*  console_main;
-	fn void AddToConsole(ExampleAppConsole* cls, const char* format, ...);
+	extern void*  console_main;
+	fn void AddToConsole(void* cls, const char* format, ...);
 	#ifndef _CR_
 	#define _CR_ ""
 	#endif
@@ -61,5 +60,16 @@
 	#define trace_print(...)   _printf(_CR_"T> " __VA_ARGS__);
 	#define log_print(...)     _printf(_CR_"L> " __VA_ARGS__);
 	#define action_print(...)  _printf(_CR_"A> " __VA_ARGS__);
+	
+	#define err_printl(cons,...) _printfl(cons,_CR_"E> " __VA_ARGS__);
+	#define _printl(cons,...)  		_printfl(cons,_CR_"O> " __VA_ARGS__);
+	#define dbg_printl(cons,...)  		dbg_printfl(cons,_CR_"D> "  __VA_ARGS__);
+	#define warn_printl(cons,...)    _printfl(cons,_CR_"W> " __VA_ARGS__);
+	#define pass_printl(cons,...)    _printfl(cons,_CR_"P> " __VA_ARGS__);
+	#define info_printl(cons,...)    _printfl(cons,_CR_"I> " __VA_ARGS__);
+	#define trace_printl(cons,...)   _printfl(cons,_CR_"T> " __VA_ARGS__);
+	#define log_printl(cons,...)     _printfl(cons,_CR_"L> " __VA_ARGS__);
+	#define action_printl(cons,...)  _printfl(cons,_CR_"A> " __VA_ARGS__);
+	
 	
 #endif

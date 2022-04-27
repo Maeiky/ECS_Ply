@@ -45,9 +45,32 @@ fn int _printf(const char*_format, ...){
 	 
 #ifdef DbgIn_ImGUI
 
-	static char buffer[4096];
-	vsprintf (buffer,_format, _arg);
+	#define MAX_BUF 4096
+	static char buffer[MAX_BUF];
+	vsnprintf (buffer,MAX_BUF,_format, _arg);
 	AddToConsole(console_main, buffer);
+	va_end( _arg );
+	return 1;
+#else
+	  int _ret = vprintf(  _format, _arg );
+	  va_end( _arg );
+	  
+	  fflush(stdout);
+	  return _ret;
+#endif
+
+}
+
+fn int _printfl(void* console, const char*_format, ...){
+	 va_list _arg;
+	 va_start( _arg, _format );
+	 
+#ifdef DbgIn_ImGUI
+
+	#define MAX_BUF 4096
+	static char buffer[MAX_BUF];
+	vsnprintf (buffer,MAX_BUF,_format, _arg);
+	AddToConsole(console, buffer);
 	va_end( _arg );
 	return 1;
 #else
